@@ -65,13 +65,8 @@ export default function Landing() {
         </div>
         <div className="flex items-center gap-4">
           <Link href="/login">
-            <Button variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 hidden sm:inline-flex">
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/inventory">
             <Button className="bg-white text-[#0A0F1E] hover:bg-white/90 font-semibold shadow-xl shadow-white/10">
-              View Products
+              Sign In
             </Button>
           </Link>
         </div>
@@ -95,15 +90,10 @@ export default function Landing() {
             Real-time analytics, smart stock tracking, and invoice intelligence all in one powerful platform.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+          <div className="flex items-center justify-center mb-20">
             <Link href="/login">
-              <Button size="lg" className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold text-lg rounded-xl shadow-lg shadow-indigo-500/25 border border-indigo-500/50">
+              <Button size="lg" className="h-14 px-10 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold text-lg rounded-xl shadow-lg shadow-indigo-500/25 border border-indigo-500/50">
                 Sign In <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/inventory">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 bg-transparent text-white border-white/20 hover:bg-white/5 hover:border-white/40 font-semibold text-lg rounded-xl backdrop-blur-sm">
-                View Products
               </Button>
             </Link>
           </div>
