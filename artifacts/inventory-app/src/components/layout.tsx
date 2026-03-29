@@ -29,7 +29,7 @@ export function Layout({ children }: LayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["admin", "staff", "user"] },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["admin", "staff", "user"] },
     { name: "Inventory", href: "/inventory", icon: Package, roles: ["admin", "staff", "user"] },
     { name: "Categories", href: "/categories", icon: Tags, roles: ["admin"] },
     { name: "Suppliers", href: "/suppliers", icon: Truck, roles: ["admin"] },

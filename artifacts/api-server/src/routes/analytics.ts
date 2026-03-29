@@ -109,23 +109,25 @@ router.get("/sales-trend", authenticate, async (req: AuthRequest, res) => {
       interval = "12 weeks";
     }
 
+    const dateFmt = period === "daily" ? "YYYY-MM-DD" : period === "weekly" ? "IYYY-IW" : "YYYY-MM";
+
     const salesTrend = await db.execute(sql`
       SELECT 
-        TO_CHAR(date, ${period === "daily" ? "YYYY-MM-DD" : period === "weekly" ? "IYYY-IW" : "YYYY-MM"}) as date,
+        TO_CHAR(date, ${dateFmt}) as date,
         SUM(CAST(quantity_sold AS numeric)) as sales,
         SUM(CAST(total_amount AS numeric)) as revenue
       FROM sales
-      WHERE date >= NOW() - INTERVAL ${interval}
+      WHERE date >= NOW() - ${sql.raw(`INTERVAL '${interval}'`)}
       GROUP BY 1
       ORDER BY 1
     `);
 
     const purchaseTrend = await db.execute(sql`
       SELECT 
-        TO_CHAR(date, ${period === "daily" ? "YYYY-MM-DD" : period === "weekly" ? "IYYY-IW" : "YYYY-MM"}) as date,
+        TO_CHAR(date, ${dateFmt}) as date,
         SUM(CAST(total_cost AS numeric)) as purchases
       FROM purchases
-      WHERE date >= NOW() - INTERVAL ${interval}
+      WHERE date >= NOW() - ${sql.raw(`INTERVAL '${interval}'`)}
       GROUP BY 1
       ORDER BY 1
     `);
