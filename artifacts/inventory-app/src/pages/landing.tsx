@@ -85,8 +85,8 @@ export default function Landing() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="max-w-4xl"
         >
-          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight leading-tight mb-6">
-            Smarter Inventory. <br />
+          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight leading-tight mb-6 text-white">
+            <span className="text-white">Smarter Inventory.</span> <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">
               Sharper Business.
             </span>
@@ -206,7 +206,7 @@ export default function Landing() {
       {/* Features Section */}
       <div className="relative z-10 container mx-auto px-6 py-32">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Everything your business needs</h2>
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4 text-white">Everything your business needs</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">A complete suite of tools designed to help you manage inventory efficiently and grow your business.</p>
         </div>
 
