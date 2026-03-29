@@ -11,7 +11,7 @@ import { eq, like, and, sql, or, desc } from "drizzle-orm";
 import { authenticate, requireRole, type AuthRequest } from "../lib/auth.js";
 
 const router = Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
 function mapProduct(p: any, catMap: Map<number, string>, supMap: Map<number, string>) {
   return {
@@ -52,6 +52,57 @@ async function getSupplierMap(): Promise<Map<number, string>> {
   return new Map(sups.map((s) => [s.id, s.name]));
 }
 
+function getCell(row: any, ...keys: string[]): string | null {
+  for (const key of keys) {
+    if (row[key] != null && row[key] !== "") return String(row[key]);
+  }
+  return null;
+}
+
+function parseRows(buffer: Buffer, mimetype: string): any[] {
+  const workbook = XLSX.read(buffer, { type: "buffer" });
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  return XLSX.utils.sheet_to_json(sheet, { defval: null }) as any[];
+}
+
+function extractFromRow(row: any) {
+  const name = getCell(row, "Product", "Product Name", "Name", "name", "product", "PRODUCT NAME", "PRODUCT");
+  const category = getCell(row, "Category", "category", "Category Name", "CATEGORY", "Cat");
+  const supplier = getCell(row, "Supplier", "Supplier Name", "supplier", "Vendor", "SUPPLIER", "Vendor Name");
+  const hsnCode = getCell(row, "HSN/SAC Code", "HSN", "SAC Code", "HSN Code", "HSN/SAC");
+  const barcode = getCell(row, "Barcode", "barcode", "SKU", "Bar Code");
+  const type = getCell(row, "Type", "type", "Product Type") || "Product";
+  const unitPrice = parseFloat(getCell(row, "Unit Price", "Price", "unit price", "Selling Price") || "0") || 0;
+  const priceWithTax = parseFloat(getCell(row, "Price with Tax", "Price With Tax", "MRP") || "0") || 0;
+  const tax = parseFloat(getCell(row, "Tax", "Tax %", "GST", "GST %") || "0") || 0;
+  const rawQty = getCell(row, "Qty", "Quantity", "qty", "quantity", "Stock", "QUANTITY", "QTY");
+  const quantity = Math.max(0, parseFloat(rawQty || "0") || 0);
+  const units = getCell(row, "Units", "Unit", "UOM", "UNITS") || "NOS";
+  const discount = parseFloat(getCell(row, "Discount", "Disc", "Discount %") || "0") || 0;
+  const discountAmount = parseFloat(getCell(row, "Discount Amount", "Disc Amount") || "0") || 0;
+  const purchaseUnitPrice = parseFloat(getCell(row, "Purchase Unit Price", "Purchase Price", "Cost Price", "Buy Price") || "0") || 0;
+  const purchasePriceWithTax = parseFloat(getCell(row, "Purchase Price With Tax", "Purchase Price w/Tax") || "0") || 0;
+  const description = getCell(row, "Description", "Desc", "description");
+  const showOnline = row["Show Online"] != null ? Boolean(row["Show Online"]) : true;
+  const notForSale = row["Not For Sale"] != null ? Boolean(row["Not For Sale"]) : false;
+  const reorderLevel = parseFloat(getCell(row, "Reorder Level", "Min Stock", "Minimum Stock", "Reorder") || "10") || 10;
+
+  return {
+    name, category, supplier, hsnCode, barcode, type,
+    unitPrice, priceWithTax, tax, quantity, units,
+    discount, discountAmount, purchaseUnitPrice, purchasePriceWithTax,
+    description, showOnline, notForSale, reorderLevel,
+  };
+}
+
+function getStockStatus(quantity: number, reorderLevel: number, notForSale: boolean): string {
+  if (notForSale) return "not_for_sale";
+  if (quantity <= 0) return "out_of_stock";
+  if (quantity <= reorderLevel) return "low_stock";
+  return "in_stock";
+}
+
 router.get("/", authenticate, async (req: AuthRequest, res) => {
   try {
     const { search, category, status, page = "1", limit = "50" } = req.query as Record<string, string>;
@@ -79,9 +130,7 @@ router.get("/", authenticate, async (req: AuthRequest, res) => {
     }
 
     if (status === "low_stock") {
-      conditions.push(
-        sql`${productsTable.quantity} > 0 AND ${productsTable.quantity} <= ${productsTable.reorderLevel}`
-      );
+      conditions.push(sql`${productsTable.quantity} > 0 AND ${productsTable.quantity} <= ${productsTable.reorderLevel}`);
     } else if (status === "out_of_stock") {
       conditions.push(sql`${productsTable.quantity} <= 0`);
     } else if (status === "in_stock") {
@@ -93,17 +142,8 @@ router.get("/", authenticate, async (req: AuthRequest, res) => {
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const [products, countResult] = await Promise.all([
-      db
-        .select()
-        .from(productsTable)
-        .where(whereClause)
-        .orderBy(desc(productsTable.updatedAt))
-        .limit(limitNum)
-        .offset(offset),
-      db
-        .select({ count: sql<number>`count(*)` })
-        .from(productsTable)
-        .where(whereClause),
+      db.select().from(productsTable).where(whereClause).orderBy(desc(productsTable.updatedAt)).limit(limitNum).offset(offset),
+      db.select({ count: sql<number>`count(*)` }).from(productsTable).where(whereClause),
     ]);
 
     const total = Number(countResult[0]?.count || 0);
@@ -125,17 +165,8 @@ router.get("/", authenticate, async (req: AuthRequest, res) => {
 router.get("/:id", authenticate, async (req: AuthRequest, res) => {
   try {
     const id = parseInt(req.params.id);
-    const [product] = await db
-      .select()
-      .from(productsTable)
-      .where(eq(productsTable.id, id))
-      .limit(1);
-
-    if (!product) {
-      res.status(404).json({ error: "Not Found" });
-      return;
-    }
-
+    const [product] = await db.select().from(productsTable).where(eq(productsTable.id, id)).limit(1);
+    if (!product) { res.status(404).json({ error: "Not Found" }); return; }
     const [catMap, supMap] = await Promise.all([getCategoryMap(), getSupplierMap()]);
     res.json(mapProduct(product, catMap, supMap));
   } catch (err) {
@@ -144,108 +175,250 @@ router.get("/:id", authenticate, async (req: AuthRequest, res) => {
   }
 });
 
-router.post(
-  "/",
-  authenticate,
-  requireRole("admin", "staff"),
-  async (req: AuthRequest, res) => {
-    try {
-      const data = req.body;
-      const [product] = await db
-        .insert(productsTable)
-        .values({
-          name: data.name,
-          categoryId: data.categoryId || null,
-          hsnCode: data.hsnCode || null,
-          barcode: data.barcode || null,
-          type: data.type || "Product",
-          unitPrice: data.unitPrice?.toString() || "0",
-          priceWithTax: data.priceWithTax?.toString() || "0",
-          tax: data.tax?.toString() || "0",
-          quantity: data.quantity?.toString() || "0",
-          units: data.units || "NOS",
-          discount: data.discount?.toString() || "0",
-          discountAmount: data.discountAmount?.toString() || "0",
-          purchaseUnitPrice: data.purchaseUnitPrice?.toString() || "0",
-          purchasePriceWithTax: data.purchasePriceWithTax?.toString() || "0",
-          description: data.description || null,
-          showOnline: data.showOnline ?? true,
-          notForSale: data.notForSale ?? false,
-          reorderLevel: data.reorderLevel?.toString() || "10",
-          supplierId: data.supplierId || null,
-        })
-        .returning();
-
-      const [catMap, supMap] = await Promise.all([getCategoryMap(), getSupplierMap()]);
-      res.status(201).json(mapProduct(product, catMap, supMap));
-    } catch (err) {
-      req.log.error({ err }, "Create product error");
-      res.status(500).json({ error: "Internal Server Error" });
-    }
+router.post("/", authenticate, requireRole("admin", "staff"), async (req: AuthRequest, res) => {
+  try {
+    const data = req.body;
+    const [product] = await db.insert(productsTable).values({
+      name: data.name,
+      categoryId: data.categoryId || null,
+      hsnCode: data.hsnCode || null,
+      barcode: data.barcode || null,
+      type: data.type || "Product",
+      unitPrice: data.unitPrice?.toString() || "0",
+      priceWithTax: data.priceWithTax?.toString() || "0",
+      tax: data.tax?.toString() || "0",
+      quantity: data.quantity?.toString() || "0",
+      units: data.units || "NOS",
+      discount: data.discount?.toString() || "0",
+      discountAmount: data.discountAmount?.toString() || "0",
+      purchaseUnitPrice: data.purchaseUnitPrice?.toString() || "0",
+      purchasePriceWithTax: data.purchasePriceWithTax?.toString() || "0",
+      description: data.description || null,
+      showOnline: data.showOnline ?? true,
+      notForSale: data.notForSale ?? false,
+      reorderLevel: data.reorderLevel?.toString() || "10",
+      supplierId: data.supplierId || null,
+    }).returning();
+    const [catMap, supMap] = await Promise.all([getCategoryMap(), getSupplierMap()]);
+    res.status(201).json(mapProduct(product, catMap, supMap));
+  } catch (err) {
+    req.log.error({ err }, "Create product error");
+    res.status(500).json({ error: "Internal Server Error" });
   }
-);
+});
 
-router.put(
-  "/:id",
+router.put("/:id", authenticate, requireRole("admin", "staff"), async (req: AuthRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const data = req.body;
+    const [product] = await db.update(productsTable).set({
+      name: data.name,
+      categoryId: data.categoryId || null,
+      hsnCode: data.hsnCode || null,
+      barcode: data.barcode || null,
+      type: data.type || "Product",
+      unitPrice: data.unitPrice?.toString() || "0",
+      priceWithTax: data.priceWithTax?.toString() || "0",
+      tax: data.tax?.toString() || "0",
+      quantity: data.quantity?.toString() || "0",
+      units: data.units || "NOS",
+      discount: data.discount?.toString() || "0",
+      discountAmount: data.discountAmount?.toString() || "0",
+      purchaseUnitPrice: data.purchaseUnitPrice?.toString() || "0",
+      purchasePriceWithTax: data.purchasePriceWithTax?.toString() || "0",
+      description: data.description || null,
+      showOnline: data.showOnline ?? true,
+      notForSale: data.notForSale ?? false,
+      reorderLevel: data.reorderLevel?.toString() || "10",
+      supplierId: data.supplierId || null,
+      updatedAt: new Date(),
+    }).where(eq(productsTable.id, id)).returning();
+
+    if (!product) { res.status(404).json({ error: "Not Found" }); return; }
+    const [catMap, supMap] = await Promise.all([getCategoryMap(), getSupplierMap()]);
+    res.json(mapProduct(product, catMap, supMap));
+  } catch (err) {
+    req.log.error({ err }, "Update product error");
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.delete("/:id", authenticate, requireRole("admin"), async (req: AuthRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(productsTable).where(eq(productsTable.id, id));
+    res.json({ success: true, message: "Product deleted" });
+  } catch (err) {
+    req.log.error({ err }, "Delete product error");
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post(
+  "/import/preview",
   authenticate,
   requireRole("admin", "staff"),
+  upload.single("file"),
   async (req: AuthRequest, res) => {
     try {
-      const id = parseInt(req.params.id);
-      const data = req.body;
+      if (!req.file) { res.status(400).json({ error: "No file uploaded" }); return; }
 
-      const [product] = await db
-        .update(productsTable)
-        .set({
-          name: data.name,
-          categoryId: data.categoryId || null,
-          hsnCode: data.hsnCode || null,
-          barcode: data.barcode || null,
-          type: data.type || "Product",
-          unitPrice: data.unitPrice?.toString() || "0",
-          priceWithTax: data.priceWithTax?.toString() || "0",
-          tax: data.tax?.toString() || "0",
-          quantity: data.quantity?.toString() || "0",
-          units: data.units || "NOS",
-          discount: data.discount?.toString() || "0",
-          discountAmount: data.discountAmount?.toString() || "0",
-          purchaseUnitPrice: data.purchaseUnitPrice?.toString() || "0",
-          purchasePriceWithTax: data.purchasePriceWithTax?.toString() || "0",
-          description: data.description || null,
-          showOnline: data.showOnline ?? true,
-          notForSale: data.notForSale ?? false,
-          reorderLevel: data.reorderLevel?.toString() || "10",
-          supplierId: data.supplierId || null,
-          updatedAt: new Date(),
-        })
-        .where(eq(productsTable.id, id))
-        .returning();
+      const rawRows = parseRows(req.file.buffer, req.file.mimetype);
+      const existingProducts = await db.select({ id: productsTable.id, name: productsTable.name, barcode: productsTable.barcode }).from(productsTable);
+      const existingByName = new Map(existingProducts.map(p => [p.name.toLowerCase().trim(), p]));
+      const existingByBarcode = new Map(existingProducts.filter(p => p.barcode).map(p => [String(p.barcode).toLowerCase(), p]));
 
-      if (!product) {
-        res.status(404).json({ error: "Not Found" });
-        return;
+      const existingCategories = await db.select({ id: categoriesTable.id, name: categoriesTable.name }).from(categoriesTable);
+      const catByName = new Map(existingCategories.map(c => [c.name.toLowerCase().trim(), c]));
+
+      const existingSuppliers = await db.select({ id: suppliersTable.id, name: suppliersTable.name }).from(suppliersTable);
+      const supByName = new Map(existingSuppliers.map(s => [s.name.toLowerCase().trim(), s]));
+
+      const previewRows: any[] = [];
+      let valid = 0, invalid = 0, newCount = 0, updateCount = 0;
+      const newCategories = new Set<string>();
+      const newSuppliers = new Set<string>();
+      const seenNames = new Set<string>();
+
+      for (const row of rawRows) {
+        const extracted = extractFromRow(row);
+        if (!extracted.name) { invalid++; continue; }
+
+        const nameLower = String(extracted.name).toLowerCase().trim();
+        const isDuplicate = seenNames.has(nameLower);
+        seenNames.add(nameLower);
+
+        const barcodeLower = extracted.barcode ? String(extracted.barcode).toLowerCase() : null;
+        const existing = existingByName.get(nameLower) || (barcodeLower ? existingByBarcode.get(barcodeLower) : undefined);
+        const action = existing ? "update" : "create";
+        if (action === "update") updateCount++;
+        else if (!isDuplicate) newCount++;
+
+        if (extracted.category) {
+          const catLower = extracted.category.toLowerCase().trim();
+          if (!catByName.has(catLower)) newCategories.add(extracted.category);
+        }
+        if (extracted.supplier) {
+          const supLower = extracted.supplier.toLowerCase().trim();
+          if (!supByName.has(supLower)) newSuppliers.add(extracted.supplier);
+        }
+
+        const stockStatus = getStockStatus(extracted.quantity, extracted.reorderLevel, extracted.notForSale);
+        valid++;
+        previewRows.push({
+          rowIndex: previewRows.length,
+          ...extracted,
+          action,
+          isDuplicate,
+          stockStatus,
+          existingId: existing?.id || null,
+        });
       }
 
-      const [catMap, supMap] = await Promise.all([getCategoryMap(), getSupplierMap()]);
-      res.json(mapProduct(product, catMap, supMap));
+      res.json({
+        rows: previewRows,
+        summary: {
+          total: rawRows.length,
+          valid,
+          invalid: rawRows.length - valid,
+          newProducts: newCount,
+          existingProducts: updateCount,
+          newCategories: newCategories.size,
+          newSuppliers: newSuppliers.size,
+        },
+      });
     } catch (err) {
-      req.log.error({ err }, "Update product error");
+      req.log.error({ err }, "Import preview error");
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
 
-router.delete(
-  "/:id",
+router.post(
+  "/import/confirm",
   authenticate,
-  requireRole("admin"),
+  requireRole("admin", "staff"),
   async (req: AuthRequest, res) => {
     try {
-      const id = parseInt(req.params.id);
-      await db.delete(productsTable).where(eq(productsTable.id, id));
-      res.json({ success: true, message: "Product deleted" });
+      const { rows } = req.body as { rows: any[] };
+      if (!rows || !Array.isArray(rows)) { res.status(400).json({ error: "No rows provided" }); return; }
+
+      const existingCats = await db.select().from(categoriesTable);
+      const catByName = new Map(existingCats.map(c => [c.name.toLowerCase().trim(), c]));
+
+      const existingSuppliers = await db.select().from(suppliersTable);
+      const supByName = new Map(existingSuppliers.map(s => [s.name.toLowerCase().trim(), s]));
+
+      let imported = 0, updated = 0, categoriesCreated = 0, suppliersCreated = 0;
+
+      for (const row of rows) {
+        if (!row.name) continue;
+
+        let categoryId: number | null = null;
+        if (row.category) {
+          const catKey = String(row.category).toLowerCase().trim();
+          if (catByName.has(catKey)) {
+            categoryId = catByName.get(catKey)!.id;
+          } else {
+            const [newCat] = await db.insert(categoriesTable).values({ name: String(row.category) }).returning();
+            categoryId = newCat.id;
+            catByName.set(catKey, newCat);
+            categoriesCreated++;
+          }
+        }
+
+        let supplierId: number | null = null;
+        if (row.supplier) {
+          const supKey = String(row.supplier).toLowerCase().trim();
+          if (supByName.has(supKey)) {
+            supplierId = supByName.get(supKey)!.id;
+          } else {
+            const [newSup] = await db.insert(suppliersTable).values({ name: String(row.supplier) }).returning();
+            supplierId = newSup.id;
+            supByName.set(supKey, newSup);
+            suppliersCreated++;
+          }
+        }
+
+        const productData = {
+          categoryId,
+          supplierId,
+          hsnCode: row.hsnCode || null,
+          barcode: row.barcode || null,
+          type: row.type || "Product",
+          unitPrice: String(row.unitPrice || "0"),
+          priceWithTax: String(row.priceWithTax || "0"),
+          tax: String(row.tax || "0"),
+          quantity: String(row.quantity || "0"),
+          units: row.units || "NOS",
+          discount: String(row.discount || "0"),
+          discountAmount: String(row.discountAmount || "0"),
+          purchaseUnitPrice: String(row.purchaseUnitPrice || "0"),
+          purchasePriceWithTax: String(row.purchasePriceWithTax || "0"),
+          description: row.description || null,
+          showOnline: row.showOnline !== false,
+          notForSale: row.notForSale === true,
+          reorderLevel: String(row.reorderLevel || "10"),
+          updatedAt: new Date(),
+        };
+
+        if (row.existingId) {
+          await db.update(productsTable).set(productData).where(eq(productsTable.id, row.existingId));
+          updated++;
+        } else {
+          try {
+            await db.insert(productsTable).values({ name: String(row.name), ...productData });
+            imported++;
+          } catch {
+            await db.update(productsTable).set(productData).where(eq(productsTable.name, String(row.name)));
+            updated++;
+          }
+        }
+      }
+
+      res.json({ imported, updated, categoriesCreated, suppliersCreated, total: imported + updated });
     } catch (err) {
-      req.log.error({ err }, "Delete product error");
+      req.log.error({ err }, "Import confirm error");
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -258,122 +431,79 @@ router.post(
   upload.single("file"),
   async (req: AuthRequest, res) => {
     try {
-      if (!req.file) {
-        res.status(400).json({ error: "No file uploaded" });
-        return;
-      }
+      if (!req.file) { res.status(400).json({ error: "No file uploaded" }); return; }
 
-      const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: null }) as any[];
+      const rawRows = parseRows(req.file.buffer, req.file.mimetype);
+      const existingCats = await db.select().from(categoriesTable);
+      const catByName = new Map(existingCats.map(c => [c.name.toLowerCase().trim(), c]));
 
-      // Ensure default category exists
-      let defaultCatId: number | null = null;
-      const [existingDefault] = await db
-        .select()
-        .from(categoriesTable)
-        .where(eq(categoriesTable.name, "General"))
-        .limit(1);
-      if (existingDefault) {
-        defaultCatId = existingDefault.id;
-      } else {
-        const [newCat] = await db
-          .insert(categoriesTable)
-          .values({ name: "General", description: "General category" })
-          .returning();
-        defaultCatId = newCat.id;
-      }
+      const existingSuppliers = await db.select().from(suppliersTable);
+      const supByName = new Map(existingSuppliers.map(s => [s.name.toLowerCase().trim(), s]));
 
-      let imported = 0;
-      let updated = 0;
-      let skipped = 0;
-      const errors: string[] = [];
+      let imported = 0, updated = 0, skipped = 0, categoriesCreated = 0, suppliersCreated = 0;
 
-      for (const row of rows) {
-        const name =
-          row["Product"] ||
-          row["product"] ||
-          row["Name"] ||
-          row["name"];
-        if (!name) {
-          skipped++;
-          continue;
-        }
+      for (const row of rawRows) {
+        const extracted = extractFromRow(row);
+        if (!extracted.name) { skipped++; continue; }
 
-        try {
-          // Get or create category
-          let categoryId = defaultCatId;
-          const catName = row["Category"] || row["category"];
-          if (catName) {
-            const [existingCat] = await db
-              .select()
-              .from(categoriesTable)
-              .where(eq(categoriesTable.name, String(catName)))
-              .limit(1);
-            if (existingCat) {
-              categoryId = existingCat.id;
-            } else {
-              const [newCat] = await db
-                .insert(categoriesTable)
-                .values({ name: String(catName) })
-                .returning();
-              categoryId = newCat.id;
-            }
-          }
-
-          const productData = {
-            categoryId,
-            hsnCode: row["HSN/SAC Code"] ? String(row["HSN/SAC Code"]) : null,
-            barcode: row["Barcode"] ? String(row["Barcode"]) : null,
-            type: row["Type"] ? String(row["Type"]) : "Product",
-            unitPrice: row["Unit Price"] != null ? String(row["Unit Price"]) : "0",
-            priceWithTax: row["Price with Tax"] != null ? String(row["Price with Tax"]) : "0",
-            tax: row["Tax"] != null ? String(row["Tax"]) : "0",
-            quantity: row["Qty"] != null ? String(Math.max(0, Number(row["Qty"]) || 0)) : "0",
-            units: row["Units"] ? String(row["Units"]) : "NOS",
-            discount: row["Discount"] != null ? String(row["Discount"]) : "0",
-            discountAmount: row["Discount Amount"] != null ? String(row["Discount Amount"]) : "0",
-            purchaseUnitPrice: row["Purchase Unit Price"] != null ? String(row["Purchase Unit Price"]) : "0",
-            purchasePriceWithTax: row["Purchase Price With Tax"] != null ? String(row["Purchase Price With Tax"]) : "0",
-            description: row["Description"] ? String(row["Description"]) : null,
-            showOnline: row["Show Online"] != null ? Boolean(row["Show Online"]) : true,
-            notForSale: row["Not For Sale"] != null ? Boolean(row["Not For Sale"]) : false,
-            updatedAt: new Date(),
-          };
-
-          // Check if product exists
-          const [existing] = await db
-            .select()
-            .from(productsTable)
-            .where(eq(productsTable.name, String(name)))
-            .limit(1);
-
-          if (existing) {
-            await db
-              .update(productsTable)
-              .set({
-                ...productData,
-                quantity: String(
-                  parseFloat(String(existing.quantity || "0")) +
-                    parseFloat(productData.quantity)
-                ),
-              })
-              .where(eq(productsTable.id, existing.id));
-            updated++;
+        let categoryId: number | null = null;
+        if (extracted.category) {
+          const catKey = extracted.category.toLowerCase().trim();
+          if (catByName.has(catKey)) {
+            categoryId = catByName.get(catKey)!.id;
           } else {
-            await db.insert(productsTable).values({
-              name: String(name),
-              ...productData,
-            });
-            imported++;
+            const [newCat] = await db.insert(categoriesTable).values({ name: extracted.category }).returning();
+            categoryId = newCat.id;
+            catByName.set(catKey, newCat);
+            categoriesCreated++;
           }
-        } catch (rowErr) {
-          errors.push(`Row with product "${name}": ${String(rowErr)}`);
+        }
+
+        let supplierId: number | null = null;
+        if (extracted.supplier) {
+          const supKey = extracted.supplier.toLowerCase().trim();
+          if (supByName.has(supKey)) {
+            supplierId = supByName.get(supKey)!.id;
+          } else {
+            const [newSup] = await db.insert(suppliersTable).values({ name: extracted.supplier }).returning();
+            supplierId = newSup.id;
+            supByName.set(supKey, newSup);
+            suppliersCreated++;
+          }
+        }
+
+        const productData = {
+          categoryId, supplierId,
+          hsnCode: extracted.hsnCode || null,
+          barcode: extracted.barcode || null,
+          type: extracted.type || "Product",
+          unitPrice: String(extracted.unitPrice),
+          priceWithTax: String(extracted.priceWithTax),
+          tax: String(extracted.tax),
+          quantity: String(extracted.quantity),
+          units: extracted.units || "NOS",
+          discount: String(extracted.discount),
+          discountAmount: String(extracted.discountAmount),
+          purchaseUnitPrice: String(extracted.purchaseUnitPrice),
+          purchasePriceWithTax: String(extracted.purchasePriceWithTax),
+          description: extracted.description || null,
+          showOnline: extracted.showOnline,
+          notForSale: extracted.notForSale,
+          reorderLevel: String(extracted.reorderLevel),
+          updatedAt: new Date(),
+        };
+
+        const [existing] = await db.select().from(productsTable).where(eq(productsTable.name, extracted.name)).limit(1);
+        if (existing) {
+          await db.update(productsTable).set(productData).where(eq(productsTable.id, existing.id));
+          updated++;
+        } else {
+          await db.insert(productsTable).values({ name: extracted.name, ...productData });
+          imported++;
         }
       }
 
-      res.json({ imported, updated, skipped, errors: errors.slice(0, 10) });
+      res.json({ imported, updated, skipped, categoriesCreated, suppliersCreated });
     } catch (err) {
       req.log.error({ err }, "Import products error");
       res.status(500).json({ error: "Internal Server Error" });
