@@ -163,9 +163,10 @@ export default function Bills() {
               color: "#333333",
               fontFamily: "sans-serif",
               overflow: "hidden",
-              position: "relative"
+              position: "relative",
+              colorScheme: "light"
             }}
-            className="print:shadow-none print:w-full print:h-auto bg-white shadow-lg rounded-xl border border-gray-200"
+            className="print:shadow-none print:w-full print:h-auto shadow-lg rounded-xl border border-gray-200"
           >
             <div style={{ padding: "32px" }}>
               {/* Header: TAX INVOICE & ORIGINAL FOR RECIPIENT */}
@@ -249,15 +250,15 @@ export default function Bills() {
               {/* Items table */}
               <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "8px", fontSize: "11px" }}>
                 <thead>
-                  <tr>
-                    <th style={{ padding: "8px 4px", textAlign: "left", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333", width: "4%" }}>#</th>
-                    <th style={{ padding: "8px 4px", textAlign: "left", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Item</th>
-                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Rate / Item</th>
-                    <th style={{ padding: "8px 4px", textAlign: "center", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Disc (%)</th>
-                    <th style={{ padding: "8px 4px", textAlign: "center", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Qty</th>
-                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Taxable Value</th>
-                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Tax Amount</th>
-                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#333" }}>Amount</th>
+                  <tr style={{ background: "#f0f4ff" }}>
+                    <th style={{ padding: "8px 4px", textAlign: "left", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b", width: "4%" }}>#</th>
+                    <th style={{ padding: "8px 4px", textAlign: "left", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Item</th>
+                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Rate / Item</th>
+                    <th style={{ padding: "8px 4px", textAlign: "center", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Disc (%)</th>
+                    <th style={{ padding: "8px 4px", textAlign: "center", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Qty</th>
+                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Taxable Value</th>
+                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Tax Amount</th>
+                    <th style={{ padding: "8px 4px", textAlign: "right", borderTop: "2px solid #3B82F6", borderBottom: "1px solid #3B82F6", color: "#1e293b" }}>Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -265,18 +266,18 @@ export default function Bills() {
                     const taxableVal = item.quantity * item.unitPrice * (1 - item.discount / 100);
                     const taxAmt = taxableVal * (item.gst / 100);
                     return (
-                      <tr key={idx} style={{ borderBottom: "1px solid #e5e7eb", background: idx % 2 === 0 ? "#fff" : "#f9fafb" }}>
-                        <td style={{ padding: "10px 4px", verticalAlign: "top" }}>{idx + 1}</td>
-                        <td style={{ padding: "10px 4px" }}>
-                          <p style={{ margin: 0, fontWeight: "bold" }}>{item.productName}</p>
-                          <p style={{ margin: "2px 0 0 0", color: "#666", fontSize: "10px" }}>HSN: {item.hsnCode || "-"}</p>
+                      <tr key={idx} style={{ borderBottom: "1px solid #e5e7eb", background: idx % 2 === 0 ? "#ffffff" : "#f8fafc", color: "#1e293b" }}>
+                        <td style={{ padding: "10px 4px", verticalAlign: "top", color: "#1e293b" }}>{idx + 1}</td>
+                        <td style={{ padding: "10px 4px", color: "#1e293b" }}>
+                          <p style={{ margin: 0, fontWeight: "bold", color: "#0f172a" }}>{item.productName}</p>
+                          <p style={{ margin: "2px 0 0 0", color: "#64748b", fontSize: "10px" }}>HSN: {item.hsnCode || "-"}</p>
                         </td>
-                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top", fontWeight: "bold" }}>{Number(item.unitPrice).toFixed(2)}</td>
-                        <td style={{ padding: "10px 4px", textAlign: "center", verticalAlign: "top" }}>{item.discount > 0 ? `${item.discount}%` : "-"}</td>
-                        <td style={{ padding: "10px 4px", textAlign: "center", verticalAlign: "top" }}>{item.quantity} NOS</td>
-                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top" }}>{taxableVal.toFixed(2)}</td>
-                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top" }}>{taxAmt.toFixed(2)} ({item.gst}%)</td>
-                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top" }}>{Number(item.amount).toFixed(2)}</td>
+                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top", fontWeight: "bold", color: "#0f172a" }}>{Number(item.unitPrice).toFixed(2)}</td>
+                        <td style={{ padding: "10px 4px", textAlign: "center", verticalAlign: "top", color: "#1e293b" }}>{item.discount > 0 ? `${item.discount}%` : "-"}</td>
+                        <td style={{ padding: "10px 4px", textAlign: "center", verticalAlign: "top", color: "#1e293b" }}>{item.quantity} NOS</td>
+                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top", color: "#1e293b" }}>{taxableVal.toFixed(2)}</td>
+                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top", color: "#1e293b" }}>{taxAmt.toFixed(2)} ({item.gst}%)</td>
+                        <td style={{ padding: "10px 4px", textAlign: "right", verticalAlign: "top", color: "#1e293b" }}>{Number(item.amount).toFixed(2)}</td>
                       </tr>
                     );
                   })}
@@ -285,60 +286,60 @@ export default function Bills() {
 
               {/* Totals Section */}
               <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
-                <table style={{ width: "250px", fontSize: "11px", fontWeight: "bold" }}>
+                <table style={{ width: "250px", fontSize: "11px", fontWeight: "bold", color: "#1e293b" }}>
                   <tbody>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>Taxable Amount</td>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>₹{Number(viewBill.subtotal - viewBill.totalDiscount).toFixed(2)}</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#334155" }}>Taxable Amount</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#0f172a" }}>₹{Number(viewBill.subtotal - viewBill.totalDiscount).toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>CGST {(viewBill.items?.[0]?.gst / 2) || 9}%</td>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>₹{(Number(viewBill.totalGst) / 2).toFixed(2)}</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#334155" }}>CGST {(viewBill.items?.[0]?.gst / 2) || 9}%</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#0f172a" }}>₹{(Number(viewBill.totalGst) / 2).toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>SGST {(viewBill.items?.[0]?.gst / 2) || 9}%</td>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>₹{(Number(viewBill.totalGst) / 2).toFixed(2)}</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#334155" }}>SGST {(viewBill.items?.[0]?.gst / 2) || 9}%</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#0f172a" }}>₹{(Number(viewBill.totalGst) / 2).toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>Round Off</td>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#334155" }}>Round Off</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#0f172a" }}>
                         {((Math.round(Number(viewBill.totalAmount)) - Number(viewBill.totalAmount)) > 0 ? "+" : "") + (Math.round(Number(viewBill.totalAmount)) - Number(viewBill.totalAmount)).toFixed(2)}
                       </td>
                     </tr>
-                    <tr>
-                      <td style={{ padding: "8px 0", textAlign: "right", fontSize: "14px", fontWeight: "bold" }}>Total</td>
-                      <td style={{ padding: "8px 0", textAlign: "right", fontSize: "14px", fontWeight: "bold" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
+                    <tr style={{ borderTop: "2px solid #3B82F6" }}>
+                      <td style={{ padding: "8px 0", textAlign: "right", fontSize: "14px", fontWeight: "bold", color: "#0f172a" }}>Total</td>
+                      <td style={{ padding: "8px 0", textAlign: "right", fontSize: "14px", fontWeight: "bold", color: "#1d4ed8" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
               {/* Items / Words Strip */}
-              <div style={{ borderTop: "1px solid #3B82F6", borderBottom: "1px solid #3B82F6", padding: "6px 4px", display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#666" }}>
-                <div>Total Items / Qty : {viewBill.items?.length} / {viewBill.items?.reduce((s:any, i:any) => s + i.quantity, 0)}</div>
-                <div>Total amount (in words): INR {viewBill.amountInWords} Only.</div>
+              <div style={{ borderTop: "1px solid #3B82F6", borderBottom: "1px solid #3B82F6", padding: "6px 4px", display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#334155", background: "#f0f4ff" }}>
+                <div style={{ color: "#334155" }}>Total Items / Qty : {viewBill.items?.length} / {viewBill.items?.reduce((s:any, i:any) => s + i.quantity, 0)}</div>
+                <div style={{ color: "#334155" }}>Total amount (in words): INR {viewBill.amountInWords} Only.</div>
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "30px" }}>
-                <table style={{ width: "250px", fontSize: "11px", fontWeight: "bold" }}>
+                <table style={{ width: "250px", fontSize: "11px", fontWeight: "bold", color: "#1e293b" }}>
                   <tbody>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right", borderBottom: "1px solid #e5e7eb" }}>Amount Payable:</td>
-                      <td style={{ padding: "4px 0", textAlign: "right", borderBottom: "1px solid #e5e7eb" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", borderBottom: "1px solid #e5e7eb", color: "#334155" }}>Amount Payable:</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", borderBottom: "1px solid #e5e7eb", color: "#0f172a" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>Total Amount due:</td>
-                      <td style={{ padding: "4px 0", textAlign: "right" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#334155" }}>Total Amount due:</td>
+                      <td style={{ padding: "4px 0", textAlign: "right", color: "#0f172a" }}>₹{Math.round(Number(viewBill.totalAmount)).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
               {/* Footer details: Bank, QR, Signature */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px", fontSize: "11px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px", fontSize: "11px", color: "#1e293b" }}>
                 {/* QR Code */}
                 <div>
-                  <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>Pay using UPI:</p>
+                  <p style={{ margin: "0 0 8px 0", fontWeight: "bold", color: "#0f172a" }}>Pay using UPI:</p>
                   {companySettings?.qrCodePath ? (
                     // Admin uploaded their own QR image — show it directly via vite proxy
                     <img
@@ -355,29 +356,29 @@ export default function Bills() {
                     </div>
                   )}
                   {companySettings?.upiId && (
-                    <p style={{ margin: "4px 0 0 0", fontSize: "10px", color: "#666" }}>{companySettings.upiId}</p>
+                    <p style={{ margin: "4px 0 0 0", fontSize: "10px", color: "#475569" }}>{companySettings.upiId}</p>
                   )}
                 </div>
                 
                 {/* Bank Details from company settings */}
                 <div>
-                  <p style={{ margin: "0 0 8px 0", fontWeight: "bold" }}>Bank Details:</p>
-                  <div style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "4px", color: "#333" }}>
-                    {companySettings?.bankName && (<><span>Bank:</span> <strong>{companySettings.bankName}</strong></>)}
-                    {companySettings?.accountNumber && (<><span>Account #:</span> <strong>{companySettings.accountNumber}</strong></>)}
-                    {companySettings?.ifsc && (<><span>IFSC Code:</span> <strong>{companySettings.ifsc}</strong></>)}
+                  <p style={{ margin: "0 0 8px 0", fontWeight: "bold", color: "#0f172a" }}>Bank Details:</p>
+                  <div style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "4px", color: "#334155" }}>
+                    {companySettings?.bankName && (<><span style={{ color: "#475569" }}>Bank:</span> <strong style={{ color: "#0f172a" }}>{companySettings.bankName}</strong></>)}
+                    {companySettings?.accountNumber && (<><span style={{ color: "#475569" }}>Account #:</span> <strong style={{ color: "#0f172a" }}>{companySettings.accountNumber}</strong></>)}
+                    {companySettings?.ifsc && (<><span style={{ color: "#475569" }}>IFSC Code:</span> <strong style={{ color: "#0f172a" }}>{companySettings.ifsc}</strong></>)}
                   </div>
                 </div>
 
                 {/* Signature */}
                 <div style={{ textAlign: "right", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ margin: 0, color: "#666" }}>For {companySettings?.name || "DHASVIN ENTERPRISES"}</p>
+                  <p style={{ margin: 0, color: "#475569" }}>For {companySettings?.name || "DHASVIN ENTERPRISES"}</p>
                   <div style={{ height: "60px", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <span style={{ fontFamily: "'Brush Script MT', cursive", fontSize: "24px" }}>
+                    <span style={{ fontFamily: "'Brush Script MT', cursive", fontSize: "24px", color: "#1e293b" }}>
                       {companySettings?.name ? companySettings.name.split(" ").slice(0, 2).join(" ") : "Authorized"}
                     </span>
                   </div>
-                  <p style={{ margin: 0, color: "#666" }}>Authorized Signatory</p>
+                  <p style={{ margin: 0, color: "#475569" }}>Authorized Signatory</p>
                 </div>
               </div>
 
