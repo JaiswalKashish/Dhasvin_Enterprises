@@ -1,4 +1,4 @@
 {
-    "buildCommand": "cd artifacts/inventory-app && npm install && npm run build",
+    "buildCommand": "npm install -g pnpm && pnpm install && pnpm --filter ./artifacts/inventory-app build",
     "outputDirectory": "artifacts/inventory-app/dist"
 }
