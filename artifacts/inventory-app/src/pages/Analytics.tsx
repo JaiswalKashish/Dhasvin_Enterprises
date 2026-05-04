@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useGetSalesTrend, useGetTopProducts, useGetCategoryBreakdown, useGetDashboardStats } from "@workspace/api-client-react";
+import { useGetSalesTrend, useGetTopProducts, useGetCategoryBreakdown, useGetDashboardStats } from "@/api-client";
 import {
   BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ComposedChart

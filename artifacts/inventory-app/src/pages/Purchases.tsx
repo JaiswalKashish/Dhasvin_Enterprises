@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetPurchases, useCreatePurchase, useGetProducts, useGetSuppliers } from "@workspace/api-client-react";
+import { useGetPurchases, useCreatePurchase, useGetProducts, useGetSuppliers } from "@/api-client";
 import { Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

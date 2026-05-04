@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLogin } from "@workspace/api-client-react";
+import { useLogin } from "@/api-client";
 import { useAuth } from "@/lib/auth";
 
 import { Button } from "@/components/ui/button";

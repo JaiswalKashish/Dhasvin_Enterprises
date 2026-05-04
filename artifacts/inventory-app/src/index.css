@@ -1,117 +1,64 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@plugin "@tailwindcss/typography";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
+@layer base {
+  :root {
+    --background: 220 74% 10%; /* #0f172a */
+    --foreground: 0 0% 100%;
 
-@theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+    --card: 210 20% 14%;
+    --card-foreground: 0 0% 100%;
+    --card-border: 215 20% 25%;
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-card-border: hsl(var(--card-border));
+    --popover: 210 20% 14%;
+    --popover-foreground: 0 0% 100%;
+    --popover-border: 215 20% 25%;
 
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-popover-border: hsl(var(--popover-border));
+    --primary: 239 82% 65%;
+    --primary-foreground: 0 0% 100%;
 
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+    --secondary: 221 64% 76%;
+    --secondary-foreground: 210 40% 10%;
 
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --muted: 222 21% 18%;
+    --muted-foreground: 216 22% 75%;
 
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+    --accent: 238 87% 68%;
+    --accent-foreground: 0 0% 100%;
 
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+    --destructive: 340 85% 64%;
+    --destructive-foreground: 0 0% 100%;
 
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --border: 221 16% 22%;
+    --input: 222 21% 16%;
+    --ring: 239 82% 65%;
 
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
+    --sidebar: 215 24% 14%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-border: 222 21% 20%;
+    --sidebar-primary: 239 82% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 24% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-ring: 239 82% 65%;
 
-  --color-sidebar: hsl(var(--sidebar));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
+    --chart-1: 235 86% 65%;
+    --chart-2: 175 60% 35%;
+    --chart-3: 280 60% 60%;
+    --chart-4: 150 60% 50%;
+    --chart-5: 340 75% 55%;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-mono: Menlo, monospace;
+    --radius: 0.85rem;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+    --shadow: 0 4px 8px -4px rgb(0 0 0 / 0.35);
+    --shadow-md: 0 6px 18px -6px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 12px 24px -8px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 40px -12px rgb(0 0 0 / 0.35);
+  }
 }
 
-:root {
-  --background: 220 74% 10%; /* #0f172a */
-  --foreground: 0 0% 100%;
-
-  --card: 210 20% 14%;
-  --card-foreground: 0 0% 100%;
-  --card-border: 215 20% 25%;
-
-  --popover: 210 20% 14%;
-  --popover-foreground: 0 0% 100%;
-  --popover-border: 215 20% 25%;
-
-  --primary: 239 82% 65%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 221 64% 76%;
-  --secondary-foreground: 210 40% 10%;
-
-  --muted: 222 21% 18%;
-  --muted-foreground: 216 22% 75%;
-
-  --accent: 238 87% 68%;
-  --accent-foreground: 0 0% 100%;
-
-  --destructive: 340 85% 64%;
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 221 16% 22%;
-  --input: 222 21% 16%;
-  --ring: 239 82% 65%;
-
-  --sidebar: 215 24% 14%;
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 222 21% 20%;
-  --sidebar-primary: 239 82% 65%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 215 24% 18%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 239 82% 65%;
-
-  --chart-1: 235 86% 65%;
-  --chart-2: 175 60% 35%;
-  --chart-3: 280 60% 60%;
-  --chart-4: 150 60% 50%;
-  --chart-5: 340 75% 55%;
-
-  --radius: 0.85rem;
-
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
-  --shadow: 0 4px 8px -4px rgb(0 0 0 / 0.35);
-  --shadow-md: 0 6px 18px -6px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 12px 24px -8px rgb(0 0 0 / 0.3);
-  --shadow-xl: 0 20px 40px -12px rgb(0 0 0 / 0.35);
-}
 
 /* Light mode CSS variables — applied when <html class="light"> */
 html.light {

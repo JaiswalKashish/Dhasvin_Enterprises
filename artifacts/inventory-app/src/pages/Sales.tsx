@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetSales, useCreateSale, useGetProducts } from "@workspace/api-client-react";
+import { useGetSales, useCreateSale, useGetProducts } from "@/api-client";
 import { Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

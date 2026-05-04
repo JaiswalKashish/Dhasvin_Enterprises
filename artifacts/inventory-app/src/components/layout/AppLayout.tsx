@@ -22,7 +22,7 @@ import {
   PanelLeftOpen
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { useGetLowStockProducts, useGetCompanySettings } from "@workspace/api-client-react";
+import { useGetLowStockProducts, useGetCompanySettings } from "@/api-client";
 import { Badge } from "@/components/ui/badge";
 
 function useTheme() {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetBills, useCreateBill, useGetProducts, useGetCompanySettings } from "@workspace/api-client-react";
+import { useGetBills, useCreateBill, useGetProducts, useGetCompanySettings } from "@/api-client";
 import { Plus, Receipt, Printer, FileText, Trash2, Eye } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";

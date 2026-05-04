@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetUsers, useCreateUser, useUpdateUser, useDeleteUser, useClearAllData } from "@workspace/api-client-react";
+import { useGetUsers, useCreateUser, useUpdateUser, useDeleteUser, useClearAllData } from "@/api-client";
 import { Plus, Edit, Trash2, ShieldAlert, Users as UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

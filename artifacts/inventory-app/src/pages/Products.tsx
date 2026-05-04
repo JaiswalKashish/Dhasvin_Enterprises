@@ -8,7 +8,7 @@ import {
   useCreateProduct,
   useUpdateProduct,
   useDeleteProduct
-} from "@workspace/api-client-react";
+} from "@/api-client";
 import { 
   Search, 
   Plus, 

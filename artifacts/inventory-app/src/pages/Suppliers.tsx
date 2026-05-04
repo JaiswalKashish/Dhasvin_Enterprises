@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetSuppliers, useCreateSupplier, useUpdateSupplier, useDeleteSupplier } from "@workspace/api-client-react";
+import { useGetSuppliers, useCreateSupplier, useUpdateSupplier, useDeleteSupplier } from "@/api-client";
 import { Plus, Edit, Trash2, Users, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

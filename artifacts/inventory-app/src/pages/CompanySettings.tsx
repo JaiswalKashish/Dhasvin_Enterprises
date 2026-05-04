@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useGetCompanySettings, useUpdateCompanySettings } from "@workspace/api-client-react";
+import { useGetCompanySettings, useUpdateCompanySettings } from "@/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

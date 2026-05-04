@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from "@workspace/api-client-react";
+import { useGetCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from "@/api-client";
 import { Plus, Edit, Trash2, Tags } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -6,7 +6,7 @@ import {
   useGetTopProducts, 
   useGetCategoryBreakdown,
   useGetLowStockProducts 
-} from "@workspace/api-client-react";
+} from "@/api-client";
 import { 
   Package, 
   DollarSign, 
