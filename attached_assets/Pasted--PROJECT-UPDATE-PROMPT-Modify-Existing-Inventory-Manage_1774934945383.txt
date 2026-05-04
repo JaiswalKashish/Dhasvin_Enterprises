@@ -1,0 +1,248 @@
+# 🚀 PROJECT UPDATE PROMPT
+
+**Modify Existing Inventory Management System (Real-World Improvements + Sales Integration)**
+
+Update my existing full-stack Inventory Management System by applying the following functional and UI/UX changes. The goal is to make the system practical, role-based, automated, and aligned with real shop usage.
+
+---
+
+## 🧩 1. REMOVE UNUSED CATEGORY MODULE
+
+* Completely remove the “Categories” section from:
+
+  * Sidebar navigation
+  * Backend routes/controllers
+  * Database schema (if exists)
+
+* Products should store category as a simple field (string) if needed
+
+* Ensure no broken UI links remain
+
+---
+
+## 🔐 2. ROLE-BASED ACCESS CONTROL (IMPORTANT)
+
+### 🔑 Admin:
+
+* Can:
+
+  * Manage inventory
+  * Manage suppliers
+  * View analytics
+  * View **bill records/history**
+* Cannot:
+
+  * Access bill generation page
+
+---
+
+### 👨‍💼 Staff:
+
+* Can:
+
+  * Generate bills
+  * Add/update stock
+  * Upload Excel files
+* Cannot:
+
+  * Access analytics/dashboard
+
+---
+
+### ⚙️ Implementation:
+
+* Protected routes (frontend + backend)
+* Conditional UI rendering based on role
+* Middleware-based authorization
+
+---
+
+## 🔄 3. AUTOMATIC STOCK UPDATE LOGIC (CORE FEATURE)
+
+### 🧾 When BILL is generated:
+
+* Deduct product quantity from inventory
+* Update database immediately
+* Reflect updated stock in UI
+
+---
+
+### 📦 When PURCHASE Excel is uploaded:
+
+* Parse Excel file
+* For each product:
+
+  * If exists → increase quantity
+  * If not exists → create new product
+* Sync updates to inventory
+
+---
+
+### ✅ Ensure:
+
+* No negative stock
+* Proper validation
+* Real-time consistency
+
+---
+
+## 🧾 4. BILL GENERATOR LOGIC IMPROVEMENT
+
+* After bill creation:
+
+  * Save bill record in database
+
+### Bill Record Includes:
+
+* Products
+
+* Quantity
+
+* Total
+
+* Date
+
+* Admin can only view (read-only)
+
+---
+
+## 🔄 5. SALES INTEGRATION WITH BILLING (VERY IMPORTANT)
+
+After a bill is generated, the system must automatically update the **Sales module**.
+
+---
+
+### 📊 Sales Record Should Include:
+
+* Product Name
+* Quantity Sold
+* Selling Price
+* Total Amount
+* Date of Sale
+* Bill ID (reference)
+
+---
+
+### ⚙️ System Flow:
+
+1. Staff generates bill
+2. System automatically:
+
+   * Deducts stock from inventory
+   * Saves bill record
+   * Creates entry in Sales module
+
+---
+
+### 📌 Behavior:
+
+* Sales page auto-displays all records
+* No manual sales entry required or there si option for manual entry also
+* Ensure sync between:
+
+  * Billing → Sales → Inventory
+
+---
+
+### ⚠️ Conditions:
+
+* Prevent duplicate entries
+* Maintain data consistency
+* Use MongoDB transactions (if possible)
+
+---
+
+## 🏢 6. SUPPLIER PHONE & EMAIL FIX
+
+Fix clickable actions:
+
+### Phone:
+
+```html
+<a href="tel:+919876543210">📞</a>
+```
+
+### Email:
+
+```html
+<a href="mailto:supplier@gmail.com">✉️</a>
+```
+
+### Ensure:
+
+* Proper formatting
+* Works on mobile & desktop
+
+---
+
+## 🌗 7. DARK / LIGHT MODE TOGGLE
+
+* Add toggle button (sun/moon icon)
+* Switch between:
+
+  * Dark mode (default)
+  * Light mode
+
+### Requirements:
+
+* Use Tailwind dark class or CSS variables
+* Store preference in localStorage
+* Apply theme on reload
+* Smooth transitions
+
+---
+
+## 🎨 8. FRONTEND CHANGES
+
+* Update sidebar:
+
+  * Remove categories
+  * Hide analytics for staff
+  * Hide bill generator for admin
+
+* Protect restricted routes
+
+* Update dashboard UI based on role
+
+---
+
+## ⚙️ 9. BACKEND CHANGES
+
+* Remove category collection (if exists)
+
+* Update controllers:
+
+  * Add stock update logic
+  * Add bill + sales integration logic
+
+* Add middleware:
+
+  * Role-based authorization
+
+* Update Excel logic:
+
+  * Merge/update inventory properly
+
+---
+
+## 🧠 FINAL EXPECTATION
+
+The system should:
+
+* Be simple and practical
+
+* Follow real shop workflow
+
+* Automate:
+
+  * Inventory
+  * Billing
+  * Sales
+
+* Maintain data consistency
+
+* Provide secure role-based access
+
+* Deliver modern UI/UX
+
+---
