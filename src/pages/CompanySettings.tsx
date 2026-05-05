@@ -102,7 +102,7 @@ export default function CompanySettings() {
         headers: { "Authorization": `Bearer ${token}` },
         body: formData
       });
-      if (!res.ok) {
+      if (!res.ok) throw new Error("Upload failed");
       const json = await res.json();
       form.setValue("logoPath", json.logoPath);
       setLogoPreview(json.logoUrl || URL.createObjectURL(file));
