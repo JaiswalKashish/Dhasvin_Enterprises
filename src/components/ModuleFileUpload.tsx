@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { UploadCloud, FileText, Check, AlertCircle, X, Trash2 } from "lucide-react";
+import { getApiUrl } from "@/lib/api-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -45,7 +46,7 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
     try {
       setUploading(true);
       
-      const response = await fetch("/api/invoices/upload", {
+      const response = await fetch(getApiUrl("/api/invoices/upload"), {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
@@ -104,7 +105,7 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
     
     try {
       setUploading(true);
-      const response = await fetch("/api/invoices/import-json", {
+      const response = await fetch(getApiUrl("/api/invoices/import-json"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

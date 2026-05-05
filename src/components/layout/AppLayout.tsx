@@ -141,7 +141,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 {isPdfLogo ? (
                   <span className="px-2 py-1 text-[10px] font-semibold text-primary">PDF</span>
                 ) : (
-                  <img src={companySettings.logoPath} alt="Logo" className="max-h-8 max-w-[80px] object-contain" />
+                  <img src={companySettings.logoPath.startsWith('http') ? companySettings.logoPath : `${(import.meta as any).env.VITE_API_URL}${companySettings.logoPath}`} alt="Logo" className="max-h-8 max-w-[80px] object-contain" />
                 )}
               </div>
             ) : (

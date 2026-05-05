@@ -210,7 +210,7 @@ export default function Bills() {
                         View PDF Logo
                       </a>
                     ) : (
-                      <img src={companySettings.logoPath} alt="Logo" style={{ maxHeight: "80px", maxWidth: "160px", objectFit: "contain" }} />
+                      <img src={companySettings.logoPath.startsWith('http') ? companySettings.logoPath : `${(import.meta as any).env.VITE_API_URL}${companySettings.logoPath}`} alt="Logo" style={{ maxHeight: "80px", maxWidth: "160px", objectFit: "contain" }} />
                     )
                   ) : (
                     <div style={{ width: "80px", height: "80px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: "#9ca3af" }}>LOGO</div>
@@ -343,7 +343,7 @@ export default function Bills() {
                   {companySettings?.qrCodePath ? (
                     // Admin uploaded their own QR image — show it directly via vite proxy
                     <img
-                      src={companySettings.qrCodePath}
+                      src={companySettings.qrCodePath.startsWith('http') ? companySettings.qrCodePath : `${(import.meta as any).env.VITE_API_URL}${companySettings.qrCodePath}`}
                       alt="UPI QR Code"
                       style={{ width: "100px", height: "100px", objectFit: "contain", border: "1px solid #e5e7eb", padding: "4px" }}
                     />

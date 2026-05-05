@@ -97,84 +97,17 @@ export default function CompanySettings() {
       const formData = new FormData();
       formData.append("logo", file);
       const token = localStorage.getItem("dhasvin_token");
-      // #region agent log
-      fetch("http://127.0.0.1:7555/ingest/170bd962-3dc4-4d25-8498-809d86c0a8a1", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "118ffa" },
-        body: JSON.stringify({
-          sessionId: "118ffa",
-          runId: "pre-fix",
-          hypothesisId: "H1-H2",
-          location: "CompanySettings.tsx:handleLogoUpload:beforeFetch",
-          message: "Starting logo upload request",
-          data: {
-            hasToken: Boolean(token),
-            fileName: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
-      const res = await fetch("/api/company/logo", {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/company/logo`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData
       });
       if (!res.ok) {
-        // #region agent log
-        fetch("http://127.0.0.1:7555/ingest/170bd962-3dc4-4d25-8498-809d86c0a8a1", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "118ffa" },
-          body: JSON.stringify({
-            sessionId: "118ffa",
-            runId: "pre-fix",
-            hypothesisId: "H1-H3",
-            location: "CompanySettings.tsx:handleLogoUpload:responseNotOk",
-            message: "Logo upload response not OK",
-            data: { status: res.status, statusText: res.statusText },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
-        throw new Error("Upload failed");
-      }
       const json = await res.json();
       form.setValue("logoPath", json.logoPath);
       setLogoPreview(json.logoUrl || URL.createObjectURL(file));
-      // #region agent log
-      fetch("http://127.0.0.1:7555/ingest/170bd962-3dc4-4d25-8498-809d86c0a8a1", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "118ffa" },
-        body: JSON.stringify({
-          sessionId: "118ffa",
-          runId: "pre-fix",
-          hypothesisId: "H2-H4",
-          location: "CompanySettings.tsx:handleLogoUpload:success",
-          message: "Logo upload response parsed",
-          data: { logoPath: json.logoPath ?? null, logoUrl: json.logoUrl ?? null },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       toast.success("Logo uploaded successfully");
     } catch (err) {
-      // #region agent log
-      fetch("http://127.0.0.1:7555/ingest/170bd962-3dc4-4d25-8498-809d86c0a8a1", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "118ffa" },
-        body: JSON.stringify({
-          sessionId: "118ffa",
-          runId: "pre-fix",
-          hypothesisId: "H1-H3-H5",
-          location: "CompanySettings.tsx:handleLogoUpload:catch",
-          message: "Logo upload threw error",
-          data: { errorMessage: err instanceof Error ? err.message : "unknown" },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       toast.error("Failed to upload logo");
     } finally {
       setUploadingLogo(false);
@@ -189,7 +122,7 @@ export default function CompanySettings() {
       const formData = new FormData();
       formData.append("qr", file);
       const token = localStorage.getItem("dhasvin_token");
-      const res = await fetch("/api/company/qr", {
+      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/company/qr`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData,

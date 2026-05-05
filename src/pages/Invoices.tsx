@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
+import { getApiUrl } from "@/lib/api-utils";
 
 interface BillItem {
   productName: string;
@@ -42,7 +43,7 @@ interface Bill {
 }
 
 async function fetchInvoices(search = "") {
-  const url = search ? `/api/bills?search=${encodeURIComponent(search)}` : "/api/bills";
+  const url = search ? getApiUrl(`/api/bills?search=${encodeURIComponent(search)}`) : getApiUrl("/api/bills");
   const token = localStorage.getItem("dhasvin_token");
   const response = await fetch(url, {
     method: "GET",
@@ -139,7 +140,7 @@ function InvoiceContent({ inv }: { inv: Bill }) {
         {snap?.qrCodePath && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <p style={{ margin: "0 0 6px 0", fontSize: "10px", fontWeight: 600, color: "#64748b", textTransform: "uppercase" }}>SCAN TO PAY</p>
-            <img src={snap.qrCodePath} alt="Payment QR" style={{ width: "90px", height: "90px", objectFit: "contain", border: "1px solid #e2e8f0", padding: "4px", borderRadius: "6px" }} />
+            <img src={snap.qrCodePath.startsWith('http') ? snap.qrCodePath : `${(import.meta as any).env.VITE_API_URL}${snap.qrCodePath}`} alt="Payment QR" style={{ width: "90px", height: "90px", objectFit: "contain", border: "1px solid #e2e8f0", padding: "4px", borderRadius: "6px" }} />
           </div>
         )}
       </div>

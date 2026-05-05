@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { UploadCloud } from "lucide-react";
+import { getApiUrl } from "@/lib/api-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -53,7 +54,7 @@ export default function FileUpload() {
       setResult(null);
       setPreviewResult(null);
 
-      const response = await fetch("/api/invoices/upload", {
+      const response = await fetch(getApiUrl("/api/invoices/upload"), {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
@@ -99,7 +100,7 @@ export default function FileUpload() {
 
     try {
       setUploading(true);
-      const response = await fetch("/api/invoices/upload", {
+      const response = await fetch(getApiUrl("/api/invoices/upload"), {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
