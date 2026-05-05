@@ -1,8 +1,0 @@
-uploads = []
-generated = []
-
-[[outputs]]
-id = "-Lm5skKe73C0NncYaaj1d"
-uri = "file://dhasvin_purchase_demo.xlsx"
-type = "table"
-title = "Dhasvin Purchase Demo - Invoice Upload Template"

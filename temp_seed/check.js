@@ -1,1 +1,0 @@
-const pg = require("pg"); const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL }); async function run() { const res = await pool.query("SELECT * FROM users"); console.log(res.rows); await pool.end(); } run().catch(console.error);
