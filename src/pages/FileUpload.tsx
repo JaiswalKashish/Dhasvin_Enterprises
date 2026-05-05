@@ -56,10 +56,17 @@ export default function FileUpload() {
 
       const response = await fetch(getApiUrl("/api/invoices/upload"), {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData,
       });
-      const data = await response.json();
+      
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
 
       if (!response.ok) {
         throw new Error(data?.message || "Preview failed.");
@@ -102,10 +109,17 @@ export default function FileUpload() {
       setUploading(true);
       const response = await fetch(getApiUrl("/api/invoices/upload"), {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData,
       });
-      const data = await response.json();
+      
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
 
       if (!response.ok) {
         throw new Error(data?.message || "Upload failed.");

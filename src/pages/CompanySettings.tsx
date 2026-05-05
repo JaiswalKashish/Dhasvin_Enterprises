@@ -97,18 +97,25 @@ export default function CompanySettings() {
       const formData = new FormData();
       formData.append("logo", file);
       const token = localStorage.getItem("dhasvin_token");
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/company/logo`, {
+      const res = await fetch(getApiUrl("/api/company/logo"), {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData
       });
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errData = await res.json();
+          throw new Error(errData.message || "Upload failed");
+        }
+        throw new Error(`Server error: ${res.status}`);
+      }
       const json = await res.json();
       form.setValue("logoPath", json.logoPath);
       setLogoPreview(json.logoUrl || URL.createObjectURL(file));
       toast.success("Logo uploaded successfully");
     } catch (err) {
-      toast.error("Failed to upload logo");
+      toast.error(err instanceof Error ? err.message : "Failed to upload logo");
     } finally {
       setUploadingLogo(false);
     }
@@ -122,18 +129,25 @@ export default function CompanySettings() {
       const formData = new FormData();
       formData.append("qr", file);
       const token = localStorage.getItem("dhasvin_token");
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}/api/company/qr`, {
+      const res = await fetch(getApiUrl("/api/company/qr"), {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: formData,
       });
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errData = await res.json();
+          throw new Error(errData.message || "Upload failed");
+        }
+        throw new Error(`Server error: ${res.status}`);
+      }
       const json = await res.json();
       form.setValue("qrCodePath", json.qrCodePath);
       setQrPreview(json.qrCodeUrl || URL.createObjectURL(file));
       toast.success("Payment QR uploaded successfully");
     } catch (err) {
-      toast.error("Failed to upload QR code");
+      toast.error(err instanceof Error ? err.message : "Failed to upload QR code");
     } finally {
       setUploadingQr(false);
     }
