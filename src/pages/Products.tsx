@@ -95,10 +95,12 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const { data: products, isLoading } = useGetProducts({
+  const { data: productsResponse, isLoading } = useGetProducts({
     search: debouncedSearch || undefined,
     category: categoryFilter !== "all" ? categoryFilter : undefined
   });
+
+  const products = productsResponse?.products || [];
 
   const { data: categories } = useGetCategories();
   const { data: suppliers } = useGetSuppliers();
@@ -256,7 +258,7 @@ export default function Products() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-48 glass-panel rounded-xl" />)}
         </div>
-      ) : products?.length === 0 ? (
+      ) : products.length === 0 ? (
         <div className="glass-panel p-12 rounded-xl flex flex-col items-center justify-center text-center">
           <Package className="h-16 w-16 text-muted-foreground mb-4 opacity-50" />
           <h3 className="text-xl font-bold text-white mb-2">No products found</h3>
@@ -270,7 +272,7 @@ export default function Products() {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          {products?.map(product => {
+          {products.map(product => {
             const status = getStockStatus(product.quantity, product.reorderLevel);
             return (
               <motion.div 
@@ -338,7 +340,7 @@ export default function Products() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {products?.map(product => {
+                {products.map(product => {
                   const status = getStockStatus(product.quantity, product.reorderLevel);
                   return (
                     <tr key={product.id} className="hover:bg-white/5 transition-colors">

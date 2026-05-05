@@ -26,7 +26,8 @@ type SupplierFormValues = z.infer<typeof supplierSchema>;
 
 export default function Suppliers() {
   const queryClient = useQueryClient();
-  const { data: suppliers, isLoading } = useGetSuppliers();
+  const { data: suppliersResponse, isLoading } = useGetSuppliers();
+  const suppliers = Array.isArray(suppliersResponse) ? suppliersResponse : [];
   const createMutation = useCreateSupplier();
   const updateMutation = useUpdateSupplier();
   const deleteMutation = useDeleteSupplier();
