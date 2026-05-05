@@ -54,7 +54,7 @@ export default function FileUpload() {
       setResult(null);
       setPreviewResult(null);
 
-      const response = await fetch(getApiUrl("/api/invoices/upload"), {
+      const response = await fetch(getApiUrl("/api/products/import/preview"), {
         method: "POST",
         headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData,
@@ -69,17 +69,17 @@ export default function FileUpload() {
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || "Preview failed.");
+        throw new Error(data?.error || data?.message || "Preview failed.");
       }
 
       setPreviewResult({
-        message: data.message || "Preview completed successfully.",
-        totalRows: data.totalRows ?? 0,
-        rows: data.rows ?? [],
+        message: data.summary ? `Found ${data.summary.newProducts} new and ${data.summary.existingProducts} existing products.` : "Preview completed successfully.",
+        totalRows: data.summary?.total ?? (data.rows?.length || 0),
+        rows: (data.rows || []).map((row: any, i: number) => ({ ...row, rowNum: i + 1 })),
         warnings: data.warnings,
         errors: data.errors,
       });
-      setDetectedType(data.detectedType || "");
+      setDetectedType(data.summary ? "Excel" : "Unknown");
       setPreviewReadyForImport(true);
       toast.success("Preview generated successfully.");
     } catch (error) {
@@ -103,11 +103,10 @@ export default function FileUpload() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("section", section);
-    formData.append("preview", "false");
 
     try {
       setUploading(true);
-      const response = await fetch(getApiUrl("/api/invoices/upload"), {
+      const response = await fetch(getApiUrl("/api/products/import"), {
         method: "POST",
         headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData,
@@ -122,13 +121,13 @@ export default function FileUpload() {
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || "Upload failed.");
+        throw new Error(data?.error || data?.message || "Upload failed.");
       }
 
       setResult({
-        message: data.message || "Upload completed successfully.",
-        processed: data.processed ?? 0,
-        failed: data.failed ?? 0,
+        message: "Import completed successfully.",
+        processed: (data.imported || 0) + (data.updated || 0),
+        failed: data.skipped || 0,
         warnings: data.warnings,
         errors: data.errors,
       });

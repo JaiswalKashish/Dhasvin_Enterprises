@@ -46,7 +46,7 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
     try {
       setUploading(true);
       
-      const response = await fetch(getApiUrl("/api/invoices/upload"), {
+      const response = await fetch(getApiUrl("/api/products/import/preview"), {
         method: "POST",
         headers: token ? { "Authorization": `Bearer ${token}` } : {},
         body: formData,
@@ -62,19 +62,27 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || "Preview failed.");
+        throw new Error(data?.error || data?.message || "Preview failed.");
       }
 
+      // Map backend response (name, unitPrice, reorderLevel) to frontend (productName, price, etc.)
+      const mappedRows = (data.rows || []).map((row: any) => ({
+        ...row,
+        productName: row.name,
+        price: row.unitPrice,
+        // Preserve other fields for the backend's confirm step
+      }));
+
       setPreviewResult({
-        message: data.message || "Preview completed successfully.",
-        totalRows: data.totalRows ?? 0,
-        rows: data.rows ?? [],
+        message: data.summary ? `Found ${data.summary.newProducts} new and ${data.summary.existingProducts} existing products.` : "Preview completed successfully.",
+        totalRows: data.summary?.total ?? mappedRows.length,
+        rows: mappedRows,
         warnings: data.warnings,
         errors: data.errors,
       });
       
       // Initialize editable rows
-      setEditedRows(data.rows ?? []);
+      setEditedRows(mappedRows);
       toast.success("File processed. Please review the data.");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Preview failed";
@@ -87,7 +95,14 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
 
   const handleRowChange = (index: number, field: string, value: any) => {
     const updated = [...editedRows];
-    updated[index] = { ...updated[index], [field]: value };
+    // If updating productName, update 'name' as well for backend compatibility
+    if (field === "productName") {
+      updated[index] = { ...updated[index], [field]: value, name: value };
+    } else if (field === "price") {
+      updated[index] = { ...updated[index], [field]: value, unitPrice: value };
+    } else {
+      updated[index] = { ...updated[index], [field]: value };
+    }
     
     // Clear specific row errors if user is editing
     if (updated[index].rowErrors && updated[index].rowErrors.length > 0) {
@@ -113,14 +128,13 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
     
     try {
       setUploading(true);
-      const response = await fetch(getApiUrl("/api/invoices/import-json"), {
+      const response = await fetch(getApiUrl("/api/products/import/confirm"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(token ? { "Authorization": `Bearer ${token}` } : {})
         },
         body: JSON.stringify({
-          section,
           rows: editedRows
         }),
       });
@@ -134,10 +148,10 @@ export function ModuleFileUpload({ section, onSuccess }: ModuleFileUploadProps) 
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || "Upload failed.");
+        throw new Error(data?.error || data?.message || "Upload failed.");
       }
 
-      toast.success(`Successfully imported ${data.processed} records.`);
+      toast.success(`Successfully imported ${data.imported || 0} and updated ${data.updated || 0} records.`);
       
       if (data.failed > 0) {
         toast.warning(`${data.failed} records failed to import. Check console for details.`);

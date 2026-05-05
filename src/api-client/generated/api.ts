@@ -2002,7 +2002,7 @@ export const useCreatePurchase = <
  * @summary Upload CSV/Excel invoice to update inventory
  */
 export const getUploadInvoiceUrl = () => {
-  return `/api/invoices/upload`;
+  return `/api/products/import`;
 };
 
 export const uploadInvoice = async (
