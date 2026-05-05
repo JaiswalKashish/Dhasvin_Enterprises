@@ -92,6 +92,7 @@ export interface CreateCategoryRequest {
 export interface Supplier {
   id: number;
   name: string;
+  gstNumber?: string;
   gst?: string;
   address?: string;
   phone?: string;
@@ -104,12 +105,15 @@ export interface Product {
   name: string;
   categoryId?: number;
   categoryName?: string;
-  price: number;
+  unitPrice: number;
+  price?: number;
   quantity: number;
+  reorderLevel?: number;
   minQuantity?: number;
   supplierId?: number;
   supplierName?: string;
   hsnCode?: string;
+  tax?: number;
   gst?: number;
   description?: string;
   createdAt?: string;
@@ -136,6 +140,7 @@ export type SupplierWithProducts = Supplier & {
 
 export interface CreateSupplierRequest {
   name: string;
+  gstNumber?: string;
   gst?: string;
   address?: string;
   phone?: string;
@@ -145,11 +150,14 @@ export interface CreateSupplierRequest {
 export interface CreateProductRequest {
   name: string;
   categoryId?: number;
-  price: number;
+  unitPrice: number;
+  price?: number;
   quantity: number;
+  reorderLevel?: number;
   minQuantity?: number;
   supplierId?: number;
   hsnCode?: string;
+  tax?: number;
   gst?: number;
   description?: string;
 }

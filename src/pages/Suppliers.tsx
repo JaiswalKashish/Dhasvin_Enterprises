@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 
 const supplierSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  gst: z.string().optional(),
+  gstNumber: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email("Invalid email").or(z.literal("")).optional(),
   address: z.string().optional(),
@@ -36,12 +36,12 @@ export default function Suppliers() {
 
   const form = useForm<SupplierFormValues>({
     resolver: zodResolver(supplierSchema),
-    defaultValues: { name: "", gst: "", phone: "", email: "", address: "" }
+    defaultValues: { name: "", gstNumber: "", phone: "", email: "", address: "" }
   });
 
   const openCreateForm = () => {
     setEditingSupplier(null);
-    form.reset({ name: "", gst: "", phone: "", email: "", address: "" });
+    form.reset({ name: "", gstNumber: "", phone: "", email: "", address: "" });
     setIsFormOpen(true);
   };
 
@@ -49,7 +49,7 @@ export default function Suppliers() {
     setEditingSupplier(supplier);
     form.reset({ 
       name: supplier.name, 
-      gst: supplier.gst || "", 
+      gstNumber: supplier.gstNumber || supplier.gst || "", 
       phone: supplier.phone || "", 
       email: supplier.email || "", 
       address: supplier.address || "" 
@@ -120,7 +120,7 @@ export default function Suppliers() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="font-semibold text-white text-lg">{supplier.name}</h3>
-                  {supplier.gst && <p className="text-xs text-muted-foreground mt-1">GST: <span className="font-mono">{supplier.gst}</span></p>}
+                  {(supplier.gstNumber || supplier.gst) && <p className="text-xs text-muted-foreground mt-1">GST: <span className="font-mono">{supplier.gstNumber || supplier.gst}</span></p>}
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => openEditForm(supplier)} className="text-muted-foreground hover:text-white transition-colors">
@@ -177,7 +177,7 @@ export default function Suppliers() {
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="gst"
+                  name="gstNumber"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>GST Number</FormLabel>

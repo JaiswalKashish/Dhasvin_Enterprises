@@ -62,11 +62,11 @@ const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
   categoryId: z.coerce.number().optional(),
   supplierId: z.coerce.number().optional(),
-  price: z.coerce.number().min(0, "Price must be positive"),
+  unitPrice: z.coerce.number().min(0, "Price must be positive"),
   quantity: z.coerce.number().min(0, "Quantity must be non-negative"),
-  minQuantity: z.coerce.number().min(0).optional(),
+  reorderLevel: z.coerce.number().min(0).optional(),
   hsnCode: z.string().optional(),
-  gst: z.coerce.number().min(0).max(100).optional(),
+  tax: z.coerce.number().min(0).max(100).optional(),
   description: z.string().optional(),
 });
 
@@ -111,10 +111,10 @@ export default function Products() {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      price: 0,
+      unitPrice: 0,
       quantity: 0,
-      minQuantity: 10,
-      gst: 18,
+      reorderLevel: 10,
+      tax: 18,
       hsnCode: "",
       description: ""
     }
@@ -130,10 +130,10 @@ export default function Products() {
     setEditingProduct(null);
     form.reset({
       name: "",
-      price: 0,
+      unitPrice: 0,
       quantity: 0,
-      minQuantity: 10,
-      gst: 18,
+      reorderLevel: 10,
+      tax: 18,
       hsnCode: "",
       description: ""
     });
@@ -146,11 +146,11 @@ export default function Products() {
       name: product.name,
       categoryId: product.categoryId,
       supplierId: product.supplierId,
-      price: product.price,
+      unitPrice: product.unitPrice || product.price || 0,
       quantity: product.quantity,
-      minQuantity: product.minQuantity || 10,
+      reorderLevel: product.reorderLevel || product.minQuantity || 10,
       hsnCode: product.hsnCode || "",
-      gst: product.gst || 18,
+      tax: product.tax || product.gst || 18,
       description: product.description || ""
     });
     setIsFormOpen(true);
@@ -190,9 +190,9 @@ export default function Products() {
     }
   };
 
-  const getStockStatus = (quantity: number, minQuantity = 10) => {
+  const getStockStatus = (quantity: number, reorderLevel = 10) => {
     if (quantity === 0) return { label: "Out of Stock", color: "bg-red-500/20 text-red-400 border-red-500/30" };
-    if (quantity <= minQuantity) return { label: "Low Stock", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" };
+    if (quantity <= reorderLevel) return { label: "Low Stock", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" };
     return { label: "In Stock", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" };
   };
 
@@ -271,7 +271,7 @@ export default function Products() {
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
           {products?.map(product => {
-            const status = getStockStatus(product.quantity, product.minQuantity);
+            const status = getStockStatus(product.quantity, product.reorderLevel);
             return (
               <motion.div 
                 key={product.id}
@@ -308,7 +308,7 @@ export default function Products() {
                 <div className="grid grid-cols-2 gap-4 mt-auto pt-4 border-t border-white/5 relative z-10">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Price</p>
-                    <p className="font-mono text-white font-medium">₹{product.price}</p>
+                    <p className="font-mono text-white font-medium">₹{product.unitPrice || product.price}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Stock</p>
@@ -339,12 +339,12 @@ export default function Products() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {products?.map(product => {
-                  const status = getStockStatus(product.quantity, product.minQuantity);
+                  const status = getStockStatus(product.quantity, product.reorderLevel);
                   return (
                     <tr key={product.id} className="hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4 font-medium text-white">{product.name}</td>
                       <td className="px-6 py-4 text-muted-foreground">{product.categoryName || '-'}</td>
-                      <td className="px-6 py-4 text-right font-mono">₹{product.price}</td>
+                      <td className="px-6 py-4 text-right font-mono">₹{product.unitPrice || product.price}</td>
                       <td className="px-6 py-4 text-right font-mono">{product.quantity}</td>
                       <td className="px-6 py-4">
                         <Badge variant="outline" className={status.color}>{status.label}</Badge>
@@ -456,7 +456,7 @@ export default function Products() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <FormField
                   control={form.control}
-                  name="price"
+                  name="unitPrice"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price (₹)*</FormLabel>
@@ -482,7 +482,7 @@ export default function Products() {
                 />
                 <FormField
                   control={form.control}
-                  name="minQuantity"
+                  name="reorderLevel"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Min Qty</FormLabel>
@@ -495,7 +495,7 @@ export default function Products() {
                 />
                 <FormField
                   control={form.control}
-                  name="gst"
+                  name="tax"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>GST (%)</FormLabel>
