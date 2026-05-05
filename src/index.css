@@ -114,11 +114,11 @@ html.light body {
 
 /* Light mode — override glassmorphism to look great on white */
 html.light .glass {
-  @apply bg-white/90 backdrop-blur-md border border-black/8 shadow-lg;
+  @apply bg-white/90 backdrop-blur-md border border-black/10 shadow-lg;
 }
 
 html.light .glass-panel {
-  @apply bg-white/95 backdrop-blur-lg border border-black/6 shadow-xl;
+  @apply bg-white/95 backdrop-blur-lg border border-black/5 shadow-xl;
 }
 
 html.light .text-white {
