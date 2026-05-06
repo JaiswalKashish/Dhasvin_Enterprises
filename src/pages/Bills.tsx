@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetBills, useCreateBill, useGetProducts, useGetCompanySettings } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Plus, Receipt, Printer, FileText, Trash2, Eye } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,10 @@ export default function Bills() {
   const isAdmin = user?.role === "admin";
   const isStaff = user?.role === "staff";
 
-  const { data: bills, isLoading, refetch } = useGetBills();
-  const { data: products } = useGetProducts();
+  const { data: billsResponse, isLoading, refetch } = useGetBills();
+  const { data: productsResponse } = useGetProducts();
+  const bills = ensureArray(billsResponse, "bills");
+  const products = ensureArray(productsResponse, "products");
   const { data: companySettings } = useGetCompanySettings();
   const createMutation = useCreateBill();
   const isPdfLogo = Boolean(companySettings?.logoPath?.toLowerCase().includes(".pdf"));

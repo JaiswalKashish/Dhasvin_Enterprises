@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetUsers, useCreateUser, useUpdateUser, useDeleteUser, useClearAllData } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Plus, Edit, Trash2, ShieldAlert, Users as UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,8 @@ type UserFormValues = z.infer<typeof userSchema>;
 
 export default function Users() {
   const queryClient = useQueryClient();
-  const { data: users, isLoading } = useGetUsers();
+  const { data: usersResponse, isLoading } = useGetUsers();
+  const users = ensureArray(usersResponse, "users");
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
   const deleteMutation = useDeleteUser();

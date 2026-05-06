@@ -7,6 +7,7 @@ import {
   useGetCategoryBreakdown,
   useGetLowStockProducts 
 } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { 
   Package, 
   DollarSign, 
@@ -32,10 +33,15 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const { data: stats, isLoading: statsLoading } = useGetDashboardStats();
-  const { data: trendData, isLoading: trendLoading } = useGetSalesTrend({ period: 'daily' });
-  const { data: topProducts, isLoading: topLoading } = useGetTopProducts({ limit: 5 });
-  const { data: categoryData, isLoading: categoryLoading } = useGetCategoryBreakdown();
-  const { data: lowStockProducts, isLoading: lowStockLoading } = useGetLowStockProducts();
+  const { data: trendResponse, isLoading: trendLoading } = useGetSalesTrend({ period: 'daily' });
+  const { data: topProductsResponse, isLoading: topLoading } = useGetTopProducts({ limit: 5 });
+  const { data: categoryResponse, isLoading: categoryLoading } = useGetCategoryBreakdown();
+  const { data: lowStockResponse, isLoading: lowStockLoading } = useGetLowStockProducts();
+
+  const trendData = ensureArray(trendResponse, "trend");
+  const topProducts = ensureArray(topProductsResponse, "products");
+  const categoryData = ensureArray(categoryResponse, "categories");
+  const lowStockProducts = ensureArray(lowStockResponse, "products");
 
   const COLORS = ['#667eea', '#43cea2', '#a18cd1', '#fbc2eb', '#ff9a9e'];
   const isLightMode =

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { getApiUrl } from "@/lib/api-utils";
+import { ensureArray } from "@/lib/api-utils";
 
 interface BillItem {
   productName: string;
@@ -158,12 +159,12 @@ export default function Invoices() {
   const [search, setSearch] = useState("");
   const [selectedInvoice, setSelectedInvoice] = useState<Bill | null>(null);
 
-  const { data: invoices, isLoading } = useQuery<Bill[]>({
+  const { data: invoicesResponse, isLoading } = useQuery({
     queryKey: ["invoices", search],
     queryFn: () => fetchInvoices(search),
   });
 
-  const invoiceList = invoices ?? [];
+  const invoiceList = ensureArray(invoicesResponse, "bills");
 
   const handlePrint = () => window.print();
 

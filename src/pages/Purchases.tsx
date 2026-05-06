@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetPurchases, useCreatePurchase, useGetProducts, useGetSuppliers } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,9 +28,12 @@ type PurchaseFormValues = z.infer<typeof purchaseSchema>;
 
 export default function Purchases() {
   const queryClient = useQueryClient();
-  const { data: purchases, isLoading } = useGetPurchases();
-  const { data: products } = useGetProducts();
-  const { data: suppliers } = useGetSuppliers();
+  const { data: purchasesResponse, isLoading } = useGetPurchases();
+  const { data: productsResponse } = useGetProducts();
+  const { data: suppliersResponse } = useGetSuppliers();
+  const purchases = ensureArray(purchasesResponse, "purchases");
+  const products = ensureArray(productsResponse, "products");
+  const suppliers = ensureArray(suppliersResponse, "suppliers");
   const createMutation = useCreatePurchase();
 
   const [isFormOpen, setIsFormOpen] = useState(false);

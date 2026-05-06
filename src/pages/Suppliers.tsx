@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetSuppliers, useCreateSupplier, useUpdateSupplier, useDeleteSupplier } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Plus, Edit, Trash2, Users, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,7 @@ type SupplierFormValues = z.infer<typeof supplierSchema>;
 export default function Suppliers() {
   const queryClient = useQueryClient();
   const { data: suppliersResponse, isLoading } = useGetSuppliers();
-  const suppliers = Array.isArray(suppliersResponse) ? suppliersResponse : [];
+  const suppliers = ensureArray(suppliersResponse, "suppliers");
   const createMutation = useCreateSupplier();
   const updateMutation = useUpdateSupplier();
   const deleteMutation = useDeleteSupplier();

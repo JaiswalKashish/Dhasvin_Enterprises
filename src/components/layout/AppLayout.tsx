@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useGetLowStockProducts, useGetCompanySettings } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Badge } from "@/components/ui/badge";
 
 function useTheme() {
@@ -66,18 +67,34 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const { theme, toggle } = useTheme();
+  const [isWakingUp, setIsWakingUp] = useState(false);
+
+  useEffect(() => {
+    const handleSlow = () => setIsWakingUp(true);
+    const handleResolved = () => setIsWakingUp(false);
+
+    window.addEventListener("api-request-slow", handleSlow);
+    window.addEventListener("api-request-resolved", handleResolved);
+
+    return () => {
+      window.removeEventListener("api-request-slow", handleSlow);
+      window.removeEventListener("api-request-resolved", handleResolved);
+    };
+  }, []);
 
   useEffect(() => {
     setSidebarOpen(false);
   }, [location]);
 
-  const { data: lowStockData } = useGetLowStockProducts({
+  const { data: lowStockResponse } = useGetLowStockProducts({
     query: {
       queryKey: ["lowStockProducts"],
       enabled: !!user,
       refetchInterval: 60000,
     }
   });
+
+  const lowStockData = ensureArray(lowStockResponse, "products");
 
   const { data: companySettings } = useGetCompanySettings({
     query: {
@@ -258,7 +275,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto p-4 lg:p-8">
+        <div className="flex-1 overflow-auto p-4 lg:p-8 relative">
+          <AnimatePresence>
+            {isWakingUp && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-amber-500/90 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm border border-amber-400/50"
+              >
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                <span className="text-xs font-semibold uppercase tracking-wider">Server is waking up...</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <AnimatePresence mode="wait">
             <motion.div
               key={location}

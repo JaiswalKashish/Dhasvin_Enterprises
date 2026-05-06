@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useGetSalesTrend, useGetTopProducts, useGetCategoryBreakdown, useGetDashboardStats } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import {
   BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ComposedChart
@@ -40,10 +41,14 @@ export default function Analytics() {
   const [startDate, setStartDate] = useState<string | undefined>(undefined);
   const [endDate, setEndDate] = useState<string | undefined>(undefined);
 
-  const { data: trendData, isLoading: trendLoading } = useGetSalesTrend({ period, startDate, endDate });
-  const { data: topProducts, isLoading: topLoading } = useGetTopProducts({ limit: 10 });
-  const { data: categoryData, isLoading: categoryLoading } = useGetCategoryBreakdown();
+  const { data: trendResponse, isLoading: trendLoading } = useGetSalesTrend({ period, startDate, endDate });
+  const { data: topProductsResponse, isLoading: topLoading } = useGetTopProducts({ limit: 10 });
+  const { data: categoryResponse, isLoading: categoryLoading } = useGetCategoryBreakdown();
   const { data: stats, isLoading: statsLoading } = useGetDashboardStats();
+
+  const trendData = ensureArray(trendResponse, "trend");
+  const topProducts = ensureArray(topProductsResponse, "products");
+  const categoryData = ensureArray(categoryResponse, "categories");
 
   const totalSales = useMemo(() =>
     (trendData || []).reduce((s, r: any) => s + (r.sales || 0), 0), [trendData]);

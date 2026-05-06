@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useGetSales, useCreateSale, useGetProducts } from "@/api-client";
+import { useGetSales, useCreateSale, useGetProducts, useDeleteSale } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,8 +29,10 @@ type SaleFormValues = z.infer<typeof saleSchema>;
 
 export default function Sales() {
   const queryClient = useQueryClient();
-  const { data: sales, isLoading } = useGetSales();
-  const { data: products } = useGetProducts();
+  const { data: salesResponse, isLoading } = useGetSales();
+  const { data: productsResponse } = useGetProducts();
+  const sales = ensureArray(salesResponse, "sales");
+  const products = ensureArray(productsResponse, "products");
   const createMutation = useCreateSale();
 
   const [isFormOpen, setIsFormOpen] = useState(false);

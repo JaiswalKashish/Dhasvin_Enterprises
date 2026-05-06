@@ -9,6 +9,7 @@ import {
   useUpdateProduct,
   useDeleteProduct
 } from "@/api-client";
+import { ensureArray } from "@/lib/api-utils";
 import { 
   Search, 
   Plus, 
@@ -100,7 +101,7 @@ export default function Products() {
     category: categoryFilter !== "all" ? categoryFilter : undefined
   });
 
-  const products = productsResponse?.products || [];
+  const products = ensureArray(productsResponse, "products");
 
   const { data: categories } = useGetCategories();
   const { data: suppliers } = useGetSuppliers();

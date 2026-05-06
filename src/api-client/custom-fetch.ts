@@ -357,12 +357,33 @@ export async function customFetch<T = unknown>(
 
   const requestInfo = { method, url: resolveUrl(input) };
 
-  const response = await fetch(input, { ...init, method, headers });
+  // Detect slow requests (Render free tier cold starts)
+  const slowRequestThreshold = 4000; // 4 seconds
+  let isSlowRequest = false;
+  const slowRequestTimeout = setTimeout(() => {
+    isSlowRequest = true;
+    window.dispatchEvent(new CustomEvent("api-request-slow", { detail: requestInfo }));
+  }, slowRequestThreshold);
 
-  if (!response.ok) {
-    const errorData = await parseErrorBody(response, method);
-    throw new ApiError(response, errorData, requestInfo);
+  try {
+    const response = await fetch(input, { ...init, method, headers });
+    clearTimeout(slowRequestTimeout);
+    
+    if (isSlowRequest) {
+      window.dispatchEvent(new CustomEvent("api-request-resolved", { detail: requestInfo }));
+    }
+
+    if (!response.ok) {
+      const errorData = await parseErrorBody(response, method);
+      throw new ApiError(response, errorData, requestInfo);
+    }
+
+    return (await parseSuccessBody(response, responseType, requestInfo)) as T;
+  } catch (error) {
+    clearTimeout(slowRequestTimeout);
+    if (isSlowRequest) {
+      window.dispatchEvent(new CustomEvent("api-request-resolved", { detail: requestInfo }));
+    }
+    throw error;
   }
-
-  return (await parseSuccessBody(response, responseType, requestInfo)) as T;
 }
