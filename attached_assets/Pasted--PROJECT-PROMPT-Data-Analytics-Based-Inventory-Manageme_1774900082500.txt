@@ -1,0 +1,340 @@
+**PROJECT PROMPT: Data Analytics Based Inventory Management System with Smart Invoice Upload and Premium SaaS UI**
+
+Build a complete full-stack web application named:
+
+**“Data Analytics Based Inventory Management System with Smart Invoice Upload and Business Insights”**
+
+This should be a **real-time, industry-level SaaS web application** for a retail shop, hardware store, warehouse, or stock-based business.
+
+---
+
+## 🎯 PROJECT OBJECTIVE
+
+Create a smart inventory system that helps businesses:
+
+- Manage products and stock efficiently
+- Upload invoices (CSV/Excel/PDF-ready)
+- Automatically update inventory
+- Track purchases and sales through excel upload features so that it can directly fetch the information
+- Analyze business performance through graphs
+- Identify low stock and dead stock
+- Generate reports and insights
+- Generate bills/invoices with print functionality
+
+---
+
+## 🛠️ TECH STACK (STRICT)
+
+### Frontend
+
+- React.js (Vite)
+- Tailwind CSS
+- React Router DOM
+- Axios
+- React Hook Form
+- Framer Motion
+- Lucide React / React Icons
+- ShadCN UI or reusable components
+
+### Backend
+
+- Node.js
+- Express.js
+
+### Database
+
+- MongoDB with Mongoose
+
+### Authentication & Security
+
+- JWT Authentication
+- bcrypt.js
+- Role-Based Access Control
+- Protected Routes
+
+### File Handling
+
+- Multer (uploads)
+- xlsx (Excel parsing)
+- csv-parser (CSV parsing)
+- pdf-parse (basic PDF support, OCR-ready structure)
+
+### Data Visualization
+
+- Recharts
+
+### Reports & Export
+
+- jsPDF
+- xlsx
+- date-fns
+
+### Analytics
+
+- JavaScript-based analytics (simple business insights)
+
+---
+
+## 👥 USER ROLES
+
+### 1) Admin
+
+- Full system access
+- Manage inventory, categories, suppliers
+- Manage users
+- View analytics & reports
+- Export data
+
+### 2) Staff
+
+- Add/update stock
+- Upload invoices
+- Record sales
+- Generate and print bills
+- View analytics & reports
+- No access to user management
+
+### 3) User
+
+- View products
+- Check stock availability and add to cart option will be there
+- No edit permissions
+
+---
+
+## 🔐 DEFAULT DEMO USERS
+
+- Admin → admin@inventory.com / Admin@123
+- Staff → staff@inventory.com / Staff@123
+- User → user@inventory.com / User@123
+
+---
+
+## 🎨 UI / UX DESIGN (PREMIUM SAAS STYLE + MOBILE FRIENDLY)
+
+### Style
+
+- Dark premium background
+- Glassmorphism UI
+- Soft UI + minimal layout
+- Rounded cards (12px–20px)
+- Smooth shadows
+- Clean spacing
+- Professional typography
+
+### Mobile Optimization (VERY IMPORTANT)
+
+- Mobile-first design
+- Big buttons for easy usage
+- Simple navigation
+- Sticky bottom menu (optional)
+
+### Colors
+
+- Primary: linear-gradient(135deg, #667eea, #764ba2)
+- Secondary: linear-gradient(135deg, #43cea2, #185a9d)
+- Accent: Indigo, Purple, Cyan, Emerald
+
+### UI Features
+
+- Responsive layout
+- Sidebar navigation
+- Animated cards
+- Hover effects
+- Toast notifications
+- Loading skeletons
+- Page transitions (Framer Motion)
+- Clean tables & forms
+
+### Toggle UI Feature (IMPORTANT)
+
+- Add toggle switch to change UI layout
+- Toggle between:
+  - Default layout
+  - Grid-based layout (with blue shade theme)
+- Grid layout should display products and data in card/grid format
+- Use soft blue gradients for grid mode for better visual clarity
+- Smooth transition animation while toggling
+- Store toggle preference (localStorage) for better user experience
+
+---
+
+## 🔍 SEARCH & FILTER SYSTEM (VERY IMPORTANT)
+
+Implement search and filtering across all modules:
+
+- Search by product name
+- Filter by category
+- Filter by low stock
+- Sort by price and quantity
+
+---
+
+## 🔔 NOTIFICATION SYSTEM
+
+- Low stock alert (badge or popup)
+- “Out of stock” warning
+- “New stock added” notification
+
+---
+
+## 🏠 LANDING PAGE (HOME)
+
+Create a **professional landing page** for:
+
+**“DHASVIN ENTERPRISES”**
+
+### Include:
+
+- Hero section with bold heading
+- Subtitle + short business description
+- Call-to-action button:
+  - Sign In
+- Dashboard preview mockup (glass UI)
+- Feature cards (inventory, analytics, invoice upload)
+- Responsive layout
+- Smooth animations
+
+⚠️ Do NOT include login form on home page
+
+---
+
+## 🔐 LOGIN PAGE (/login)
+
+- Glassmorphism login card
+- Email & password fields
+- Clean spacing & typography
+- Demo credentials section
+- Back to Home link
+- Smooth animations
+
+---
+
+## 📦 CORE FEATURES
+
+- Product management (CRUD)
+- Stock tracking
+- Sales & purchase entry
+- Auto stock updates
+- Basic dashboard (KPIs)
+
+---
+
+## 📊 SIMPLE ANALYTICS (SHOPKEEPER FRIENDLY)
+
+- Daily sales
+- Monthly sales
+- Top selling products
+
+---
+
+## 🧾 BILL GENERATOR FEATURE (REALISTIC)
+
+- Generate professional invoices/bills
+- Include:
+  - GST calculation
+  - HSN code field
+  - Discount field
+  - Total amount in words
+  - Company header (DHASVIN ENTERPRISES)
+- Print-friendly layout
+- Export as PDF
+
+---
+
+## 📁 SMART INVOICE SYSTEM
+
+- Upload CSV / Excel files
+- Parse and update inventory automatically
+- Validate Excel format and show errors if incorrect
+- Show clear error messages for missing columns, wrong formats, or empty fields
+
+---
+
+## 🏢 SUPPLIER MANAGEMENT (ENHANCED)
+
+- Store supplier details (name, GST, address)
+- Add phone number and email fields
+
+### Smart Actions:
+- Click phone → opens dial option (tel link)
+- Click email → opens mail client (mailto link)
+
+### Advanced Features:
+- View supplier products (all items provided by that supplier)
+- Track purchase history per supplier
+- Filter purchase history by date, product, or quantity
+
+---
+
+## 🗂️ DATA MANAGEMENT (IMPORTANT)
+
+- Provide a **“Clear All Data”** button for admin
+- On click:
+  - Delete existing inventory, sales, suppliers, and related data
+  - Show confirmation dialog before deletion
+- After clearing:
+  - Allow fresh Excel upload to reinitialize the system with new data
+- Optional: show success/failure toast notifications
+
+---
+
+## 🛡️ DATA SAFETY FEATURES
+
+- Confirmation before delete
+- Auto-save forms
+- Error handling for Excel upload
+
+---
+
+## 🧱 PROJECT STRUCTURE
+
+### Frontend
+
+- Components
+- Pages
+- Layouts
+- Hooks
+- Services
+- Context
+- Routes
+
+### Backend
+
+- Models
+- Controllers
+- Routes
+- Middleware
+- Config
+- Utils
+
+---
+
+## 🎯 FINAL REQUIREMENTS
+
+- Fully responsive
+- Clean and modular code
+- Production-style architecture
+- Beginner-friendly but professional
+- Must support real-world usage
+- Suitable for:
+  - Final year project
+  - Internship portfolio
+  - GitHub showcase
+  - Resume & PPT presentation
+
+---
+
+## 🚀 EXPECTED OUTPUT
+
+A complete **full-stack SaaS inventory system** with:
+
+- Modern landing page
+- Secure login system
+- Role-based dashboards
+- Smart inventory tracking
+- Data analytics & insights
+- Invoice upload automation
+- Bill generation and printing system
+
+---

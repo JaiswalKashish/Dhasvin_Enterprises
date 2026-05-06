@@ -1,0 +1,223 @@
+# 🚀 ADVANCED SYSTEM PROMPT
+
+**UI + BILLING + ANALYTICS + PDF EXTRACTION + DYNAMIC COMPANY SETTINGS (PROFESSIONAL SYSTEM)**
+
+Update my existing Inventory Management System to implement a **fully responsive, real-time, and professional business system**, including dynamic company details management.
+
+---
+
+## 🏢 0. COMPANY DETAILS (DYNAMIC SYSTEM - VERY IMPORTANT)
+
+Do NOT hardcode company details.
+Create a **Company Settings Module** where admin can edit business details.
+
+---
+
+### 📌 COMPANY SETTINGS FEATURE
+
+Create a dedicated section:
+👉 “Company Settings” (Admin only)
+
+---
+
+### ✏️ Editable Fields:
+
+* Company Name
+* GSTIN
+* PAN (optional)
+* Address
+* Phone Number
+* Email
+* Logo Upload
+
+---
+
+### ⚙️ FUNCTIONALITY:
+
+* Admin can:
+
+  * Add / Edit / Update company details
+* Save data in database (MongoDB)
+* Fetch dynamically across system
+
+---
+
+### 🔄 AUTO SYNC USAGE:
+
+Use these details dynamically in:
+
+* Invoice / Bill Generator
+* PDF Export
+* Dashboard Header
+* Reports
+
+---
+
+### 🖼️ LOGO HANDLING:
+
+* Upload logo using Multer
+* Store file path
+* Display in:
+
+  * Top-right of invoice
+  * Dashboard (optional)
+
+---
+
+### 📦 DEFAULT DATA:
+
+If no data exists:
+
+* Show default placeholder:
+
+  * “Your Company Name”
+  * “Add company details in settings”
+
+---
+
+## 🌗 1. DARK / LIGHT MODE (FULLY RESPONSIVE)
+
+* Fix theme toggle completely
+* Ensure proper UI rendering in both modes
+* Store preference in localStorage
+* Smooth transitions
+
+---
+
+## 🧾 2. PROFESSIONAL BILL GENERATOR (REAL GST FORMAT)
+
+Use dynamic company details.
+
+---
+
+### 📄 HEADER SECTION
+
+Include:
+
+* Company Name
+* GSTIN
+* Address
+* Phone & Email
+* Logo (top-right)
+
+---
+
+### 🧍 CUSTOMER SECTION
+
+* Customer Name
+* GSTIN
+* Phone
+
+---
+
+### 📍 BILLING ADDRESS
+
+* Full formatted address
+
+---
+
+### 🧾 INVOICE DETAILS
+
+* Invoice Number
+* Date
+* Place of Supply
+
+---
+
+### 📦 PRODUCT TABLE
+
+* Item Name
+* HSN Code
+* Quantity
+* Rate
+* GST %
+* Tax Amount
+* Total
+
+---
+
+### 💰 TAX
+
+* CGST + SGST auto
+
+---
+
+### 💵 TOTAL
+
+* Subtotal
+* GST
+* Final Amount
+* Amount in words
+
+---
+
+### 💳 PAYMENT
+
+* Mode
+* Status
+
+---
+
+### ✍️ FOOTER
+
+* Authorized Signatory
+* Digital invoice note
+
+---
+
+### 🖨️ FEATURES
+
+* Print-ready
+* PDF export
+
+---
+
+## 📄 3. PDF INVOICE EXTRACTION (AUTOMATED)
+
+* Upload PDF
+* Extract data (`pdf-parse`)
+* OCR-ready structure
+
+---
+
+### 🔄 AUTO SYNC:
+
+✔ Inventory updated
+✔ Purchase created
+✔ Sales updated (if needed)
+
+---
+
+### 📊 VALIDATION:
+
+* Show preview
+* Allow editing before save
+
+---
+
+## 📊 4. ANALYTICS (DATE FILTER)
+
+* Date range picker
+* Sales graph (Recharts)
+* Total Sales / Purchases
+
+---
+
+## 🔄 5. SYSTEM FLOW
+
+PDF / Excel Upload → Inventory Update → Purchase Record
+Bill → Inventory Decrease → Sales Record
+
+---
+
+## 🎯 FINAL EXPECTATION
+
+System should:
+
+* Be dynamic (no hardcoded data)
+* Allow editing company details anytime
+* Generate real invoices
+* Maintain real-time sync
+* Be clean, responsive, and professional
+
+---

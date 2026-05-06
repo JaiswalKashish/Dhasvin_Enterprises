@@ -1,0 +1,215 @@
+# 🚀 UI + BILLING + ANALYTICS + PDF EXTRACTION ENHANCEMENT PROMPT
+
+Update my existing Inventory Management System to improve UI theme, bill design, analytics, and add **PDF/Invoice extraction capability** for real-world automation.
+
+---
+
+## 🌗 1. FIX DARK / LIGHT MODE (CRITICAL BUG FIX)
+
+### Problem:
+
+Light mode toggle is not working properly.
+
+### Fix Requirements:
+
+* Use Tailwind `dark` class or CSS variables
+* Ensure proper contrast in both modes
+
+### Dark Mode:
+
+* Background: dark navy/black
+* Text: white/gray
+* Cards: glassmorphism
+
+### Light Mode:
+
+* Background: white/light gray
+* Text: dark
+* Cards: soft white
+
+### Additional:
+
+* Save preference in `localStorage`
+* Apply on reload
+* Smooth transitions
+
+---
+
+## 🧾 2. BILL UI REDESIGN (REAL GST INVOICE)
+
+Design a professional invoice similar to real GST billing software.
+
+### Include:
+
+* Company Header: **DHASVIN ENTERPRISES**
+* Logo (top right)
+* GSTIN, Address, Contact
+
+### Customer Section:
+
+* Name
+* GSTIN
+* Phone
+* Billing Address
+
+### Invoice Details:
+
+* Invoice Number
+* Date
+* Place of Supply
+
+### Product Table:
+
+* Product Name
+* HSN Code
+* Price
+* Quantity
+* GST %
+* Tax Amount
+* Total
+
+### Tax Calculation:
+
+* CGST + SGST auto calculation
+
+### Total Section:
+
+* Subtotal
+* GST
+* Final Amount
+* Amount in words
+
+### Footer:
+
+* Authorized Signatory
+* Digital invoice note
+
+### Features:
+
+* Print-friendly
+* PDF export
+
+---
+
+## 📄 3. PDF / INVOICE EXTRACTION (NEW FEATURE 🔥)
+
+Enable system to extract data from uploaded invoice PDFs.
+
+---
+
+### 📥 INPUT:
+
+* Upload PDF invoice file
+
+---
+
+### ⚙️ PROCESS:
+
+* Use:
+
+  * `pdf-parse` (for text extraction)
+  * OCR-ready structure (future support using `tesseract.js`)
+
+---
+
+### 📊 EXTRACTION FIELDS:
+
+System should attempt to extract:
+
+* Product Name
+* Quantity
+* Price
+* GST %
+* HSN Code
+* Total Amount
+* Supplier Name
+
+---
+
+### 🧠 SMART MATCHING:
+
+* Match extracted product names with existing inventory
+* If product exists → update stock
+* If not → create new product
+
+---
+
+### ⚠️ VALIDATION:
+
+* Show preview before saving
+* Allow manual correction
+* Show error if parsing fails
+
+---
+
+### 📦 OUTPUT:
+
+* Update inventory automatically
+* Create purchase record
+* Store original PDF
+
+---
+
+## 📊 4. ANALYTICS IMPROVEMENT (DATE FILTER LIKE SWIPE)
+
+---
+
+### 📅 DATE RANGE FILTER:
+
+* Add Start Date & End Date picker
+* Filter analytics based on selected range
+
+---
+
+### 📈 GRAPH:
+
+Use Recharts:
+
+* Show Sales vs Date
+* Smooth line chart
+
+---
+
+### 📊 DISPLAY DATA:
+
+* Total Sales
+* Total Purchases
+* Number of Transactions
+
+---
+
+### 📉 GRAPH FEATURES:
+
+* Tooltip (date, amount, transactions)
+* Dynamic updates
+
+---
+
+### 📊 SUMMARY CARDS:
+
+* Total Sales
+* Total Purchases
+* Profit (optional)
+
+---
+
+### 🧠 UI:
+
+* Clean layout
+* Proper spacing
+* Minimal design
+
+---
+
+## 🎯 FINAL EXPECTATION
+
+System should now:
+
+* Have fully working dark/light mode
+* Generate real GST invoices
+* Support PDF invoice upload & extraction
+* Automatically update inventory from PDF
+* Provide date-based analytics
+* Look like real industry software
+
+---
