@@ -18,14 +18,24 @@ router.get("/", authenticate, async (req: AuthRequest, res) => {
 
 router.post("/", authenticate, requireRole("admin", "staff"), async (req: AuthRequest, res) => {
   try {
-    const { name, contactPerson, phone, email, address, city, state, notes } = req.body;
+    const { name, contactPerson, phone, email, address, city, state, notes, gstNumber, gst } = req.body;
     if (!name) {
       res.status(400).json({ error: "Name is required" });
       return;
     }
     const [supplier] = await db
       .insert(suppliersTable)
-      .values({ name, contactPerson, phone, email, address, city, state, notes })
+      .values({ 
+        name, 
+        contactPerson, 
+        phone, 
+        email, 
+        address, 
+        city, 
+        state, 
+        notes,
+        gstNumber: gstNumber || gst || null
+      })
       .returning();
     res.status(201).json(supplier);
   } catch (err) {
@@ -37,10 +47,21 @@ router.post("/", authenticate, requireRole("admin", "staff"), async (req: AuthRe
 router.put("/:id", authenticate, requireRole("admin", "staff"), async (req: AuthRequest, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, contactPerson, phone, email, address, city, state, notes } = req.body;
+    const { name, contactPerson, phone, email, address, city, state, notes, gstNumber, gst } = req.body;
     const [supplier] = await db
       .update(suppliersTable)
-      .set({ name, contactPerson, phone, email, address, city, state, notes, updatedAt: new Date() })
+      .set({ 
+        name, 
+        contactPerson, 
+        phone, 
+        email, 
+        address, 
+        city, 
+        state, 
+        notes, 
+        gstNumber: gstNumber || gst || null,
+        updatedAt: new Date() 
+      })
       .where(eq(suppliersTable.id, id))
       .returning();
     if (!supplier) {
