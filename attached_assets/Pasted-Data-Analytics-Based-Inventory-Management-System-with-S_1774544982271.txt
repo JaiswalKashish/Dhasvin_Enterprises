@@ -1,0 +1,765 @@
+Data Analytics Based Inventory Management System with Smart Invoice Upload
+Build a complete full-stack web application named:
+“Data Analytics Based Inventory Management System with Smart Invoice Upload and Business Insights”
+This should be a real-time industry-level web application for a retail shop / hardware shop / warehouse / stock-based business with a strong focus on:
+•	modern UI/UX 
+•	inventory control 
+•	smart stock tracking 
+•	invoice and bill upload 
+•	data analytics 
+•	sales and purchase insights 
+•	demand forecasting 
+•	role-based dashboards 
+•	business intelligence 
+The application must be:
+•	fully responsive 
+•	modern and visually attractive 
+•	modular and scalable 
+•	production-style 
+•	cleanly coded 
+•	beginner-friendly but professional 
+•	suitable for: 
+o	final year project 
+o	mini/major project 
+o	GitHub portfolio 
+o	internship showcase 
+o	resume and PPT presentation 
+________________________________________
+🛠️ TECH STACK (USE STRICTLY)
+Frontend
+•	React.js 
+•	Vite 
+•	Tailwind CSS 
+•	React Router DOM 
+•	Axios 
+•	React Hook Form 
+•	Framer Motion 
+•	React Icons 
+•	Lucide React 
+•	ShadCN UI or custom reusable UI components 
+Backend
+•	Node.js 
+•	Express.js 
+Database
+•	MongoDB with Mongoose 
+Authentication & Security
+•	JWT Authentication 
+•	bcrypt.js 
+•	Role-Based Access Control 
+•	Protected Routes 
+Data Visualization
+•	Recharts (preferred) 
+File Upload / Parsing / Import
+•	Multer → file upload handling 
+•	xlsx → Excel parsing 
+•	csv-parser → CSV parsing 
+•	pdf-parse or OCR-ready architecture for PDF invoices 
+•	Optional OCR-ready support for future image bill extraction 
+Reporting / Export
+•	jsPDF 
+•	xlsx 
+•	date-fns 
+Analytics / Forecasting
+•	JavaScript logic 
+•	Optional future support for Python/Pandas 
+________________________________________
+🎯 PROJECT OBJECTIVE
+Create a smart inventory management system that helps a shop or warehouse:
+•	manage products and stock efficiently 
+•	upload invoice/bill or Excel inventory sheets 
+•	automatically update stock 
+•	analyze inventory performance 
+•	track purchases and sales 
+•	identify low stock and dead stock 
+•	provide category and product insights 
+•	generate reports 
+•	forecast future demand 
+•	support real business decision-making through analytics 
+This project should simulate a real company/shop workflow.
+________________________________________
+👥 USER ROLES (IMPORTANT)
+Implement 3 login roles:
+________________________________________
+1) Admin
+Access:
+•	Full access to all modules 
+•	Manage inventory 
+•	Manage categories 
+•	Manage suppliers 
+•	Manage purchases 
+•	Manage sales 
+•	View analytics 
+•	View and export reports 
+•	Manage users 
+•	Access settings 
+Dashboard:
+•	Full business dashboard with complete analytics and management features 
+________________________________________
+2) Staff
+Access:
+•	Add stock 
+•	Update stock 
+•	Upload bills/invoices 
+•	Record purchases and sales 
+•	View reports 
+•	View analytics dashboard 
+•	View charts and insights 
+•	Cannot manage users or sensitive settings 
+Dashboard:
+•	Operational dashboard for daily stock and analytics tasks 
+________________________________________
+3) User
+Access:
+•	Only view available products in shop 
+•	View stock currently present 
+•	View product details 
+•	No editing or management permissions 
+Dashboard:
+•	Basic clean stock availability dashboard 
+________________________________________
+🔐 DEFAULT LOGIN CREDENTIALS (SEED USERS)
+Create seeded demo users automatically.
+Admin
+•	Email: admin@inventory.com 
+•	Password: Admin@123 
+Staff
+•	Email: staff@inventory.com 
+•	Password: Staff@123 
+User
+•	Email: user@inventory.com 
+•	Password: User@123 
+________________________________________
+🎨 UI / UX DESIGN REQUIREMENTS (VERY IMPORTANT)
+The entire application must look like a premium SaaS dashboard.
+Design Style
+Use:
+•	Glassmorphism 
+•	Soft UI 
+•	Minimal clean layout 
+•	Rounded cards 
+•	Smooth shadows 
+•	Beautiful spacing 
+•	Professional dashboard design 
+•	Modern business application feel 
+Color Theme
+Primary Gradient
+linear-gradient(135deg, #667eea, #764ba2)
+Secondary Gradient
+linear-gradient(135deg, #43cea2, #185a9d)
+Accent Colors
+•	Indigo 
+•	Purple 
+•	Cyan 
+•	Emerald 
+•	Soft white / dark navy 
+UI Rules
+•	Border radius: 12px–20px 
+•	Soft shadows 
+•	Glass blur panels 
+•	Gradient buttons 
+•	Smooth hover animations 
+•	Clean tables 
+•	Premium forms 
+•	Responsive charts 
+•	Professional badges and pills 
+•	Beautiful empty states 
+•	Mobile-friendly layout 
+UI Enhancements
+Include:
+•	hover effects 
+•	animated cards 
+•	loading skeletons 
+•	toast notifications 
+•	animated page transitions 
+•	responsive sidebar 
+•	dark mode (optional but impressive) 
+________________________________________
+🧱 MAIN APP STRUCTURE
+________________________________________
+1️⃣ AUTHENTICATION MODULE
+Pages
+•	Login Page 
+•	Register Page (Admin-only or hidden setup) 
+•	Role-based redirect after login 
+Features
+•	JWT login 
+•	Password hashing 
+•	Protected routes 
+•	Role-based page access 
+•	Session persistence 
+________________________________________
+2️⃣ MAIN APP LAYOUT
+Top Navbar
+Include:
+•	App logo / project name 
+•	Search bar 
+•	Notification icon 
+•	User profile dropdown 
+•	Logout button 
+Sidebar Navigation
+Include:
+•	Dashboard 
+•	Inventory 
+•	Categories 
+•	Suppliers 
+•	Purchases 
+•	Sales 
+•	Analytics 
+•	Reports 
+•	Settings 
+Role-based Sidebar Visibility
+•	Admin → all modules 
+•	Staff → limited operational + analytics modules 
+•	User → only dashboard and products 
+________________________________________
+3️⃣ DASHBOARD MODULE
+Create a beautiful modern dashboard.
+KPI Cards
+Include:
+•	Total Products 
+•	Total Sales 
+•	Low Stock Items 
+•	Revenue 
+•	Inventory Value 
+•	Total Categories 
+•	Total Suppliers 
+•	Available Stock Count 
+Charts Section
+Include:
+•	Line Chart → Sales Trend 
+•	Bar Chart → Top Selling Products 
+•	Pie Chart → Category Distribution 
+•	Bar Chart → Low Stock Products 
+•	Area/Line Chart → Purchase vs Sales Trend 
+Insights Panel
+Show smart insights like:
+•	Fast Moving Product 
+•	Dead Stock Alert 
+•	Restock Suggestion 
+•	Top Category 
+•	Most Profitable Product 
+•	Low Performing Product 
+Dashboard by Role
+•	Admin → full business dashboard 
+•	Staff → stock operations + analytics dashboard 
+•	User → basic product availability dashboard 
+________________________________________
+4️⃣ INVENTORY MANAGEMENT MODULE
+Features
+•	Add Product 
+•	Edit Product 
+•	Delete Product 
+•	View Product Details 
+•	Search products 
+•	Filter products 
+•	Sort products 
+•	Bulk product import from uploaded Excel/CSV 
+Product Fields
+Use data structure based on real shop data:
+•	Product ID / SKU 
+•	Product Name 
+•	Category 
+•	HSN/SAC Code 
+•	Barcode (store only if available in uploaded data) 
+•	Type 
+•	Unit Price 
+•	Price with Tax 
+•	Tax 
+•	Quantity 
+•	Units 
+•	Discount 
+•	Discount Amount 
+•	Purchase Unit Price 
+•	Purchase Price With Tax 
+•	Description 
+•	Show Online 
+•	Not For Sale 
+•	Reorder Level 
+•	Supplier Name (if mapped) 
+•	Created At / Updated At 
+UI
+•	Modern inventory table 
+•	Search and filter panel 
+•	Status badges: 
+o	In Stock 
+o	Low Stock 
+o	Out of Stock 
+o	Not For Sale 
+________________________________________
+5️⃣ CATEGORY MANAGEMENT MODULE
+Features
+•	Add Category 
+•	Edit Category 
+•	Delete Category 
+•	Category-wise product count 
+•	Category-wise analytics 
+Fields
+•	Category Name 
+•	Description 
+________________________________________
+6️⃣ SUPPLIER MANAGEMENT MODULE
+Features
+•	Add Supplier 
+•	Edit Supplier 
+•	Delete Supplier 
+•	View supplier details 
+•	Supplier-linked purchase records 
+Fields
+•	Supplier Name 
+•	Contact Person 
+•	Phone Number 
+•	Email 
+•	Address 
+•	City / State 
+•	Notes 
+________________________________________
+7️⃣ PURCHASE MANAGEMENT MODULE (SMART VERSION)
+This is one of the most important modules.
+Build a Smart Purchase Management System that supports both manual and automated stock updates.
+________________________________________
+PURCHASE ENTRY MODES
+Mode 1 – Manual Purchase Entry
+Admin/Staff can manually enter purchase details:
+•	Supplier 
+•	Product 
+•	Quantity 
+•	Purchase Price 
+•	Date 
+•	Bill Number 
+•	Status 
+Mode 2 – Upload Bill / Invoice / Excel / CSV
+This is the primary advanced feature.
+Allow Admin/Staff to upload:
+•	Excel files (.xlsx / .xls) 
+•	CSV files 
+•	PDF invoices 
+•	Optional future support for image bill upload 
+________________________________________
+SMART IMPORT / BILL ANALYSIS WORKFLOW
+When a file is uploaded, the system should:
+Step 1 – Read uploaded file
+Parse uploaded file using:
+•	xlsx for Excel 
+•	csv-parser for CSV 
+•	pdf-parse for PDF text extraction 
+Step 2 – Extract data fields
+System should identify and extract fields such as:
+•	Product Name 
+•	Category 
+•	HSN/SAC Code 
+•	Barcode 
+•	Type 
+•	Unit Price 
+•	Price with Tax 
+•	Tax 
+•	Qty 
+•	Units 
+•	Discount 
+•	Discount Amount 
+•	Purchase Unit Price 
+•	Purchase Price With Tax 
+•	Description 
+•	Not For Sale 
+Step 3 – Data Mapping Preview
+Show a beautiful “Preview Imported Data” screen where user can:
+•	review extracted rows 
+•	edit wrong values 
+•	map columns if needed 
+•	remove invalid rows 
+•	validate missing fields 
+Step 4 – Smart Inventory Sync
+After confirmation, system should:
+•	check if product already exists 
+•	update stock if existing product is found 
+•	insert new product if product is not found 
+•	update purchase price if needed 
+•	preserve product metadata 
+•	create purchase records automatically 
+Step 5 – Auto Stock Update
+When import/purchase is confirmed:
+•	stock quantity should automatically increase 
+•	purchase records should be stored 
+•	analytics should refresh immediately 
+________________________________________
+Purchase History
+Maintain:
+•	purchase date 
+•	supplier 
+•	uploaded file source 
+•	imported product count 
+•	updated stock count 
+•	purchase cost summary 
+Purchase Fields
+•	Purchase ID 
+•	Supplier 
+•	Product 
+•	Quantity Purchased 
+•	Purchase Cost 
+•	Date 
+•	Bill Number 
+•	Import Source 
+•	Status: 
+o	Pending 
+o	Received 
+o	Cancelled 
+________________________________________
+8️⃣ SALES MANAGEMENT MODULE
+Features
+•	Record Sales 
+•	Reduce stock automatically 
+•	Sales history 
+•	Filter by product/date/category 
+•	Optional invoice generation 
+Fields
+•	Sale ID 
+•	Product 
+•	Quantity Sold 
+•	Selling Price 
+•	Date 
+•	Payment Method 
+•	Invoice Number 
+Logic
+When sale is recorded:
+•	stock quantity must decrease automatically 
+•	analytics should refresh 
+________________________________________
+9️⃣ LOW STOCK ALERT SYSTEM
+Features
+Highlight products when:
+quantity < reorder level
+Alerts to Show
+•	Low Stock Alert 
+•	Out of Stock Alert 
+•	Dead Stock Alert 
+•	Restock Suggestion 
+UI
+•	Warning badges 
+•	Highlighted inventory rows 
+•	Dashboard alert cards 
+•	Smart insights section 
+________________________________________
+🔟 ANALYTICS MODULE (VERY IMPORTANT)
+This module must be precise, meaningful, and based on actual uploaded data, not fake charts.
+Build analytics using real values from:
+•	products 
+•	sales 
+•	purchases 
+•	categories 
+•	pricing 
+•	stock levels 
+________________________________________
+📊 ANALYTICS PAGE STRUCTURE
+Create the analytics page with tabs or sections:
+•	Overview 
+•	Sales Analytics 
+•	Inventory Analytics 
+•	Purchase Analytics 
+•	Profit & Revenue Analytics 
+•	Forecasting 
+•	Reports 
+________________________________________
+1️⃣ ANALYTICS OVERVIEW
+Show KPI cards for:
+•	Total Revenue 
+•	Total Products 
+•	Total Stock Available 
+•	Inventory Value 
+•	Low Stock Count 
+•	Dead Stock Count 
+•	Fast Moving Product 
+•	Top Category 
+________________________________________
+2️⃣ SALES ANALYTICS
+Include:
+•	Daily sales 
+•	Weekly sales 
+•	Monthly sales 
+•	Product-wise sales 
+•	Category-wise sales 
+•	Best-selling products 
+•	Least-selling products 
+Charts:
+•	Line Chart → sales trend over time 
+•	Bar Chart → top selling products 
+•	Pie Chart → category-wise sales 
+________________________________________
+3️⃣ INVENTORY ANALYTICS
+Include:
+•	Current stock summary 
+•	Inventory value 
+•	Low stock products 
+•	Out of stock products 
+•	Overstocked products 
+•	Stock movement summary 
+Charts:
+•	Bar Chart → low stock products 
+•	Pie Chart → stock distribution by category 
+________________________________________
+4️⃣ PURCHASE ANALYTICS
+Include:
+•	Total purchases 
+•	Monthly purchase trend 
+•	Supplier-wise purchases 
+•	Product-wise purchase volume 
+•	Purchase cost analysis 
+Charts:
+•	Line Chart → purchase trend 
+•	Bar Chart → top purchased products 
+•	Pie Chart → supplier contribution 
+________________________________________
+5️⃣ PROFIT & REVENUE ANALYTICS
+This module should use selling price and purchase price from your data.
+Include:
+•	Total Revenue 
+•	Total Purchase Cost 
+•	Estimated Profit 
+•	Product Profitability 
+•	Category Profitability 
+Formula
+Use:
+Profit = Selling Revenue - Purchase Cost
+Charts:
+•	Bar Chart → most profitable products 
+•	Area/Line Chart → revenue vs cost trend 
+________________________________________
+6️⃣ SMART INSIGHTS / BUSINESS INTELLIGENCE
+Calculate these using actual logic:
+Fast Moving Product
+Product with highest total quantity sold.
+Least Selling Product
+Product with lowest quantity sold.
+Dead Stock
+Product that:
+•	has stock available 
+•	but has no sales in recent selected period 
+Low Stock
+If:
+quantity < reorder level
+Out of Stock
+If:
+quantity = 0
+Restock Suggestion
+Suggest restock if:
+quantity < reorder level
+OR
+average recent sales > available stock
+Top Category
+Category with highest total sales.
+Inventory Value
+Use:
+Sum(quantity × purchase_unit_price)
+Revenue
+Use:
+Sum(quantity_sold × selling_price)
+Stock Health Score
+Create a score based on:
+•	low stock count 
+•	dead stock count 
+•	out of stock count 
+•	total active products 
+________________________________________
+7️⃣ DEMAND FORECASTING MODULE
+Implement forecasting based on actual sales history.
+Use:
+Moving Average Forecasting
+This is preferred for your project because it is:
+•	correct 
+•	explainable 
+•	easy to implement 
+•	suitable for viva 
+Forecast Outputs
+•	Predicted demand for next 7 days 
+•	Predicted demand for next 30 days 
+•	Suggested reorder quantity 
+•	High-demand products 
+Forecast Logic
+Use recent sales history per product and calculate moving average.
+Visualization
+•	Forecast trend chart 
+•	Product demand prediction cards 
+•	Reorder suggestion table 
+________________________________________
+1️⃣1️⃣ REPORTS MODULE
+Generate reports for:
+•	Inventory Report 
+•	Sales Report 
+•	Purchase Report 
+•	Low Stock Report 
+•	Category Report 
+•	Supplier Report 
+•	Profit Report 
+Features
+•	Filter by date range 
+•	Filter by category 
+•	Filter by supplier 
+•	Filter by product 
+•	Export as: 
+o	PDF 
+o	Excel 
+o	CSV 
+________________________________________
+1️⃣2️⃣ SETTINGS MODULE
+Features
+•	Profile settings 
+•	Shop/company name 
+•	Contact details 
+•	Invoice/report branding 
+•	Theme preference (optional) 
+________________________________________
+🗂️ DATABASE MODELS / COLLECTIONS
+Create MongoDB models for:
+•	Users 
+•	Products 
+•	Categories 
+•	Suppliers 
+•	Purchases 
+•	Sales 
+•	ImportedFiles 
+•	Reports (optional) 
+•	Notifications (optional) 
+Each schema must include:
+•	createdAt 
+•	updatedAt 
+Use proper references where needed.
+________________________________________
+🔌 BACKEND REQUIREMENTS
+Use Node.js + Express.js and build a modular REST API.
+Backend Folder Structure
+•	controllers 
+•	routes 
+•	models 
+•	middleware 
+•	config 
+•	services 
+•	utils 
+•	parsers 
+•	seed 
+Backend Features
+•	CRUD APIs for all modules 
+•	Auth APIs 
+•	Role middleware 
+•	Product import APIs 
+•	File upload APIs 
+•	Excel/CSV/PDF parsing APIs 
+•	Analytics APIs 
+•	Forecasting APIs 
+•	Report export APIs 
+•	Stock auto-update logic 
+•	Purchase import preview logic 
+________________________________________
+🖥️ FRONTEND REQUIREMENTS
+Use React + Tailwind CSS.
+Frontend Folder Structure
+•	pages 
+•	components 
+•	layouts 
+•	hooks 
+•	context 
+•	services 
+•	utils 
+•	charts 
+•	tables 
+•	forms 
+•	modals 
+Frontend Features
+•	Responsive design 
+•	Reusable components 
+•	Protected routes 
+•	Role-based rendering 
+•	Sidebar navigation 
+•	Search/filter UI 
+•	Import preview table 
+•	Modern forms 
+•	Alert panels 
+•	Dashboard cards 
+•	Chart components 
+•	Toast messages 
+•	Modal forms 
+•	Confirmation dialogs 
+________________________________________
+📊 DATA VISUALIZATION REQUIREMENTS
+Use Recharts and include:
+•	Line Chart → Sales Trend 
+•	Bar Chart → Top Products 
+•	Pie Chart → Category Distribution 
+•	Line Chart → Purchase Trend 
+•	Bar Chart → Low Stock Products 
+•	Area/Line Chart → Revenue vs Cost 
+•	Forecast Line Chart → Predicted Demand 
+Charts must be:
+•	responsive 
+•	modern 
+•	theme-consistent 
+•	animated 
+•	tooltip enabled 
+•	legend enabled 
+________________________________________
+🧠 DATA IMPORT REQUIREMENTS (VERY IMPORTANT)
+The system must support importing real shop inventory data like:
+•	Product 
+•	Category 
+•	HSN/SAC Code 
+•	Barcode 
+•	Type 
+•	Unit Price 
+•	Price with Tax 
+•	Tax 
+•	Qty 
+•	Units 
+•	Discount 
+•	Discount Amount 
+•	Purchase Unit Price 
+•	Purchase Price With Tax 
+•	Description 
+•	Not For Sale 
+The imported file should be used to:
+•	populate products 
+•	update stock 
+•	sync pricing 
+•	generate analytics 
+•	support purchase tracking 
+This is a core business feature.
+________________________________________
+🔐 SECURITY & BEST PRACTICES
+Follow:
+•	bcrypt password hashing 
+•	JWT auth 
+•	role-based protection 
+•	input validation 
+•	file validation 
+•	error handling 
+•	environment variables 
+•	modular architecture 
+•	duplicate prevention during imports 
+________________________________________
+🚀 DEPLOYMENT READY
+Prepare for deployment on:
+Frontend
+•	Vercel / Netlify 
+Backend
+•	Render / Railway 
+Database
+•	MongoDB Atlas 
+Include:
+•	.env.example 
+•	README.md 
+•	setup guide 
+•	seed instructions 
+________________________________________
+📘 EXPECTED OUTPUT
+Generate the complete project with:
+1.	Full folder structure 
+2.	MongoDB schema 
+3.	Backend API code 
+4.	React frontend code 
+5.	Login/authentication system 
+6.	Role-based dashboards 
+7.	Inventory management pages 
+8.	Smart invoice/data upload module 
+9.	Import preview and stock sync logic 
+10.	Analytics dashboard 
+11.	Forecasting logic 
+12.	Reports export 
+13.	Responsive premium UI 
+14.	Step-by-step explanation 
+
