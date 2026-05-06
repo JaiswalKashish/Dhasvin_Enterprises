@@ -23,3 +23,15 @@ export function ensureArray<T>(data: any, key?: string): T[] {
   
   return [];
 }
+
+/**
+ * Returns the full API URL for a given path.
+ * Prepends VITE_API_URL if it exists.
+ */
+export function getApiUrl(path: string): string {
+  const baseUrl = import.meta.env.VITE_API_URL || '';
+  // Ensure no double slashes
+  const cleanBase = baseUrl.replace(/\/$/, '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${cleanBase}${cleanPath}`;
+}
