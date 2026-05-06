@@ -8,6 +8,8 @@ import purchasesRouter from "./purchases.js";
 import salesRouter from "./sales.js";
 import analyticsRouter from "./analytics.js";
 import usersRouter from "./users.js";
+import companyRouter from "./company.js";
+import billsRouter from "./bills.js";
 
 const router = Router();
 
@@ -20,5 +22,7 @@ router.use("/purchases", purchasesRouter);
 router.use("/sales", salesRouter);
 router.use("/analytics", analyticsRouter);
 router.use("/users", usersRouter);
+router.use("/company", companyRouter);
+router.use("/bills", billsRouter);
 
 export default router;

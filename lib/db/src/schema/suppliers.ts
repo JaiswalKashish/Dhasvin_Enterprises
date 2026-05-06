@@ -11,6 +11,7 @@ export const suppliersTable = pgTable("suppliers", {
   address: text("address"),
   city: text("city"),
   state: text("state"),
+  gstNumber: text("gst_number"),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

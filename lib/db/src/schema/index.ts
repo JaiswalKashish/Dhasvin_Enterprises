@@ -4,3 +4,5 @@ export * from "./suppliers";
 export * from "./products";
 export * from "./purchases";
 export * from "./sales";
+export * from "./company";
+export * from "./bills";
