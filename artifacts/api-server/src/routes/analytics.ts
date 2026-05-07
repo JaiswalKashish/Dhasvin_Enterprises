@@ -179,7 +179,7 @@ router.get("/top-products", authenticate, async (req: AuthRequest, res) => {
   }
 });
 
-router.get("/category-distribution", authenticate, async (req: AuthRequest, res) => {
+router.get("/category-breakdown", authenticate, async (req: AuthRequest, res) => {
   try {
     const distribution = await db
       .select({
