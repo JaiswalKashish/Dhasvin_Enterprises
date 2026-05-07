@@ -68,7 +68,7 @@ export default function Sales() {
     });
   };
 
-  const totalSalesAmount = sales?.reduce((sum, sale) => sum + (sale.totalAmount || 0), 0) || 0;
+  const totalSalesAmount = (Array.isArray(sales) ? sales : []).reduce((sum, sale) => sum + (sale.totalAmount || 0), 0) || 0;
 
   return (
     <div className="space-y-6">

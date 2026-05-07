@@ -51,9 +51,9 @@ export default function Analytics() {
   const categoryData = ensureArray(categoryResponse, "categories");
 
   const totalSales = useMemo(() =>
-    (trendData || []).reduce((s, r: any) => s + (r.sales || 0), 0), [trendData]);
+    (Array.isArray(trendData) ? trendData : []).reduce((s, r: any) => s + (r.sales || 0), 0), [trendData]);
   const totalPurchases = useMemo(() =>
-    (trendData || []).reduce((s, r: any) => s + (r.purchases || 0), 0), [trendData]);
+    (Array.isArray(trendData) ? trendData : []).reduce((s, r: any) => s + (r.purchases || 0), 0), [trendData]);
   const isLightMode =
     typeof document !== "undefined" &&
     document.documentElement.classList.contains("light");
