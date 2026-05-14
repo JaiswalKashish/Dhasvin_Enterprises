@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://inventory-backend-h8q7.onrender.com/api/$1" },
-    { "source": "/uploads/(.*)", "destination": "https://inventory-backend-h8q7.onrender.com/uploads/$1" },
+    { "source": "/api/:path*", "destination": "https://inventory-backend-h8q7.onrender.com/api/:path*" },
+    { "source": "/uploads/:path*", "destination": "https://inventory-backend-h8q7.onrender.com/uploads/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

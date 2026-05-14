@@ -66,7 +66,7 @@ export default function Bills() {
   };
 
   const calculateTotal = () => {
-    return items.reduce((sum, item) => {
+    return (Array.isArray(items) ? items : []).reduce((sum, item) => {
       const subtotal = item.quantity * item.unitPrice;
       const afterDiscount = subtotal - (item.discount || 0);
       const tax = afterDiscount * ((item.gst || 0) / 100);
@@ -319,7 +319,7 @@ export default function Bills() {
 
               {/* Items / Words Strip */}
               <div style={{ borderTop: "1px solid #3B82F6", borderBottom: "1px solid #3B82F6", padding: "6px 4px", display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#334155", background: "#f0f4ff" }}>
-                <div style={{ color: "#334155" }}>Total Items / Qty : {viewBill.items?.length} / {viewBill.items?.reduce((s:any, i:any) => s + i.quantity, 0)}</div>
+                <div style={{ color: "#334155" }}>Total Items / Qty : {(viewBill.items || []).length} / {(Array.isArray(viewBill.items) ? viewBill.items : []).reduce((s:any, i:any) => s + i.quantity, 0)}</div>
                 <div style={{ color: "#334155" }}>Total amount (in words): INR {viewBill.amountInWords} Only.</div>
               </div>
 
@@ -417,7 +417,7 @@ export default function Bills() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {bills?.map(bill => (
+                    {(Array.isArray(bills) ? bills : []).map(bill => (
                       <tr key={bill.id} className="hover:bg-white/5 transition-colors">
                         <td className="px-6 py-4 font-mono font-medium text-primary">{bill.billNumber}</td>
                         <td className="px-6 py-4 text-muted-foreground">
@@ -508,7 +508,7 @@ export default function Bills() {
                 </Button>
               </div>
 
-              {items.map((item, idx) => (
+              {(Array.isArray(items) ? items : []).map((item, idx) => (
                 <div key={idx} className="flex gap-2 items-end bg-white/5 p-3 rounded-lg border border-white/5">
                   <div className="flex-1">
                     <label className="text-xs text-muted-foreground mb-1 block">Product</label>

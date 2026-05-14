@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   const monthlyRevenueData = useMemo(() => {
     const monthMap = new Map<string, number>();
-    (trendData ?? []).forEach((entry: any) => {
+    (Array.isArray(trendData) ? trendData : []).forEach((entry: any) => {
       const rawDate = entry?.date;
       const sales = Number(entry?.sales ?? 0);
       const parsed = rawDate ? new Date(rawDate) : null;
@@ -175,7 +175,7 @@ export default function Dashboard() {
           </h3>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topProducts || []} layout="vertical" margin={{ top: 0, right: 8, left: 8, bottom: 0 }}>
+              <BarChart data={Array.isArray(topProducts) ? topProducts : []} layout="vertical" margin={{ top: 0, right: 8, left: 8, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isLightMode ? "#e5e7eb" : "rgba(255,255,255,0.1)"} horizontal={false} />
                 <XAxis
                   type="number"
@@ -280,7 +280,7 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {lowStockProducts.map((item, idx) => (
+                  {(Array.isArray(lowStockProducts) ? lowStockProducts : []).map((item, idx) => (
                     <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="px-4 py-3 font-medium text-white">{item.productName}</td>
                       <td className="px-4 py-3 text-muted-foreground">{item.categoryName || '-'}</td>
